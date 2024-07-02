@@ -1,5 +1,7 @@
 <?php
 session_start();
+session_unset();
 session_destroy();
-header("Location: index.html"); // Ganti dengan path ke halaman HTML yang diinginkan
+header("Location: index.html");
 exit();
+?>

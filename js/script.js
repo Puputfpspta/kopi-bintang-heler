@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
 // Menghubungkan form kontak ke WhatsApp
 function submitForm(event) {
     event.preventDefault();
@@ -57,15 +56,14 @@ function submitForm(event) {
     const whatsappURL = `https://wa.me/6281288111722?text=${encodeURIComponent(message)}`;
 
     window.open(whatsappURL, '_blank');
-    }
-
+}
 
 // Toggle deskripsi produk
 document.querySelectorAll('.item-detail-button').forEach(button => {
     button.addEventListener('click', function(event) {
         event.preventDefault();
         const productCard = this.closest('.product-card');
-        const overlay = productCard.querySelector('.description-overlay');
+        const overlay = productCard.querySelector('.deskripsi-overlay');
         overlay.style.display = (overlay.style.display === 'block') ? 'none' : 'block';
     });
 });

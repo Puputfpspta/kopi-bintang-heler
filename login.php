@@ -9,15 +9,29 @@ if (isset($_POST['login'])) {
     $password = $_POST['password'];
 
     $stmt = $conn->prepare("SELECT * FROM admin WHERE username = ?");
+    if ($stmt === false) {
+        die('Prepare failed: ' . htmlspecialchars($conn->error));
+    }
+    
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        if (password_verify($password, $row['password'])) {
+        // Debugging: Menampilkan username, hash password, dan password input
+        echo "Username: " . htmlspecialchars($username) . "<br>";
+        echo "Password Input: " . htmlspecialchars($password) . "<br>";
+        echo "Password Hash: " . htmlspecialchars($row['password']) . "<br>";
+
+        // Verifikasi password
+        $password_verify_result = password_verify($password, $row['password']);
+        echo "Password Verify Result: " . ($password_verify_result ? 'true' : 'false') . "<br>";
+
+        if ($password_verify_result) {
             $_SESSION['username'] = $username;
-            header("Location: admin.php");
+            echo "Login berhasil, redirecting...";
+            header("Refresh: 2; url=admin.php");
             exit();
         } else {
             $error = 'Username atau password salah';

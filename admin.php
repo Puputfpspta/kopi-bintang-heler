@@ -1,9 +1,43 @@
 <?php
 session_start();
+include 'db.php';
+include 'function.php';
+
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
+
+// Menangani penambahan produk
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
+    $nama = $_POST['nama'];
+    $kategori = $_POST['kategori'];
+    $harga = $_POST['harga'];
+    $stok = $_POST['stok'];
+    $status = $_POST['status'];
+
+    addProduct($nama, $kategori, $harga, $status, $stok);
+
+    header("Location: admin.php");
+    exit();
+}
+
+// Menangani penambahan stok
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_stock'])) {
+    $id = $_POST['id'];
+    $stok = $_POST['stok'];
+
+    updateProductStock($id, $stok);
+
+    header("Location: admin.php");
+    exit();
+}
+
+// Fetch data for the admin dashboard
+$products = getProducts();
+$ordersCount = getOrdersCount();
+$productsCount = getProductsCount();
+$customersCount = getCustomersCount();
 ?>
 
 <!DOCTYPE html>
@@ -11,7 +45,7 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Produk Kopi | Kopi Bintang Heler</title>
+    <title>Admin Dashboard - Kopi Bintang Heler</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -24,7 +58,7 @@ if (!isset($_SESSION['username'])) {
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="produk.php" class="active"><span class="fas fa-coffee"></span>
+                    <a href="admin.php" class="active"><span class="fas fa-coffee"></span>
                         <span>Produk</span></a>
                 </li>
                 <li>
@@ -49,11 +83,15 @@ if (!isset($_SESSION['username'])) {
                 <label for="nav-toggle">
                     <span class="fas fa-bars"></span>
                 </label>
-                Kelola Produk
+                Admin Dashboard
             </h2>
 
             <div class="user-wrapper">
-                <img src="img/bag.jpg" width="150px" height="60px">
+                <img src="img/bag.jpg" width="40px" height="40px" alt="Admin">
+                <div>
+                    <h4>Admin Kopi Bintang Heler</h4>
+                    <small>Admin</small>
+                </div>
             </div>
         </header>
 
@@ -61,7 +99,7 @@ if (!isset($_SESSION['username'])) {
             <div class="cards">
                 <div class="card-single">
                     <div>
-                        <h1>54</h1>
+                        <h1><?php echo $productsCount; ?></h1>
                         <span>Produk</span>
                     </div>
                     <div>
@@ -71,7 +109,7 @@ if (!isset($_SESSION['username'])) {
 
                 <div class="card-single">
                     <div>
-                        <h1>79</h1>
+                        <h1><?php echo $ordersCount; ?></h1>
                         <span>Pesanan</span>
                     </div>
                     <div>
@@ -81,21 +119,11 @@ if (!isset($_SESSION['username'])) {
 
                 <div class="card-single">
                     <div>
-                        <h1>124</h1>
+                        <h1><?php echo $customersCount; ?></h1>
                         <span>Pelanggan</span>
                     </div>
                     <div>
                         <span class="fas fa-user"></span>
-                    </div>
-                </div>
-
-                <div class="card-single">
-                    <div>
-                        <h1>6</h1>
-                        <span>Review</span>
-                    </div>
-                    <div>
-                        <span class="fas fa-comment"></span>
                     </div>
                 </div>
             </div>
@@ -105,7 +133,7 @@ if (!isset($_SESSION['username'])) {
                     <div class="card">
                         <div class="card-header">
                             <h3>Kelola Produk Kopi</h3>
-                            <button>Tambah Produk <span class="fas fa-plus"></span></button>
+                            <button onclick="document.getElementById('addProductForm').style.display='block'">Tambah Produk <span class="fas fa-plus"></span></button>
                         </div>
 
                         <div class="card-body">
@@ -117,115 +145,60 @@ if (!isset($_SESSION['username'])) {
                                             <td>Nama Produk</td>
                                             <td>Kategori</td>
                                             <td>Harga</td>
+                                            <td>Stok</td>
                                             <td>Status</td>
+                                            <td>Tambah Stok</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>#KOPI001</td>
-                                            <td>Robusta Petik Merah</td>
-                                            <td>Robusta</td>
-                                            <td>Rp. 45.000</td>
-                                            <td><span class="status purple"></span> Tersedia</td>
-                                        </tr>
-                                        <tr>
-                                            <td>#KOPI002</td>
-                                            <td>Robusta Premium</td>
-                                            <td>Robusta</td>
-                                            <td>Rp. 35.000</td>
-                                            <td><span class="status pink"></span> Tersedia</td>
-                                        </tr>
-                                        <tr>
-                                            <td>#KOPI003</td>
-                                            <td>Robusta Premium 500g</td>
-                                            <td>Robusta</td>
-                                            <td>Rp.Baik, berikut adalah versi terpisah dari kode CSS dan PHP untuk halaman login yang sesuai dengan yang Anda inginkan.
+                                        <?php foreach ($products as $product) : ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($product['id']); ?></td>
+                                                <td><?php echo htmlspecialchars($product['nama']); ?></td>
+                                                <td><?php echo htmlspecialchars($product['kategori']); ?></td>
+                                                <td>Rp. <?php echo number_format($product['harga'], 0, ',', '.'); ?></td>
+                                                <td><?php echo htmlspecialchars($product['stok']); ?></td>
+                                                <td><span class="status <?php echo ($product['status'] == 'Tersedia' ? 'green' : 'red'); ?>"></span> <?php echo htmlspecialchars($product['status']); ?></td>
+                                                <td>
+                                                    <form action="admin.php" method="post" style="display:inline;">
+                                                        <input type="hidden" name="id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                                                        <input type="number" name="stok" min="1" required>
+                                                        <button type="submit" name="update_stock" class="button">Tambah</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-### File CSS: `style.css`
-```css
-:root {
-  --primary: #007bff;
-  --bg: #f5f5f5;
-}
+    <div id="addProductForm" style="display: none;">
+        <form action="admin.php" method="post">
+            <label for="nama">Nama Produk:</label><br>
+            <input type="text" id="nama" name="nama"><br>
+            <label for="kategori">Kategori:</label><br>
+            <input type="text" id="kategori" name="kategori"><br>
+            <label for="harga">Harga:</label><br>
+            <input type="number" id="harga" name="harga"><br>
+            <label for="stok">Stok:</label><br>
+            <input type="number" id="stok" name="stok"><br>
+            <label for="status">Status:</label><br>
+            <input type="text" id="status" name="status"><br><br>
+            <input type="submit" name="add_product" value="Submit">
+        </form>
+    </div>
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  outline: none;
-  border: none;
-  text-decoration: none;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: 'Laila', sans-serif;
-  background-color: var(--bg);
-  color: rgb(252, 248, 248);
-}
-
-/* Login Container */
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.login-container {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 300px;
-}
-
-.login-container h2 {
-  margin-bottom: 1rem;
-  color: #333;
-}
-
-.login-container form {
-  display: flex;
-  flex-direction: column;
-}
-
-.login-container .form-group {
-  margin-bottom: 1rem;
-  text-align: left;
-}
-
-.login-container label {
-  margin-bottom: 0.5rem;
-  display: block;
-  color: #333;
-}
-
-.login-container input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%;
-}
-
-.login-container .button {
-  background-color: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 0.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.login-container .button:hover {
-  background-color: darken(var(--primary), 10%);
-}
-
-.login-container .error {
-  color: red;
-  margin-bottom: 1rem;
-}
+    <script>
+        // Script untuk menampilkan form tambah produk
+        function showAddProductForm() {
+            document.getElementById('addProductForm').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

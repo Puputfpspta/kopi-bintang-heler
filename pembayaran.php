@@ -1,26 +1,19 @@
 <?php
 session_start();
+include 'db.php';
+include 'function.php';
+
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
 
-// Koneksi ke database
-$conn = new mysqli('localhost', 'root', '', 'kopi_bintang_heler');
-
-// Cek koneksi
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
-}
-
 // Ambil data pembayaran
-$sql = "SELECT * FROM pembayaran";
-$result = $conn->query($sql);
+$payments = getPayments();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +21,6 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
     <div class="sidebar">
         <div class="sidebar-brand">
@@ -38,7 +30,7 @@ $result = $conn->query($sql);
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="produk.php"><span class="fas fa-coffee"></span>
+                    <a href="admin.php"><span class="fas fa-coffee"></span>
                         <span>Produk</span></a>
                 </li>
                 <li>
@@ -76,48 +68,6 @@ $result = $conn->query($sql);
         </header>
 
         <main>
-            <div class="cards">
-                <div class="card-single">
-                    <div>
-                        <h1>54</h1>
-                        <span>Produk</span>
-                    </div>
-                    <div>
-                        <span class="fas fa-coffee"></span>
-                    </div>
-                </div>
-
-                <div class="card-single">
-                    <div>
-                        <h1>79</h1>
-                        <span>Pesanan</span>
-                    </div>
-                    <div>
-                        <span class="fas fa-shopping-cart"></span>
-                    </div>
-                </div>
-
-                <div class="card-single">
-                    <div>
-                        <h1>124</h1>
-                        <span>Pelanggan</span>
-                    </div>
-                    <div>
-                        <span class="fas fa-user"></span>
-                    </div>
-                </div>
-
-                <div class="card-single">
-                    <div>
-                        <h1>6</h1>
-                        <span>Review</span>
-                    </div>
-                    <div>
-                        <span class="fas fa-comment"></span>
-                    </div>
-                </div>
-            </div>
-
             <div class="recent-grid">
                 <div class="projects">
                     <div class="card">
@@ -132,21 +82,21 @@ $result = $conn->query($sql);
                                         <tr>
                                             <td>ID Pembayaran</td>
                                             <td>Nama Pelanggan</td>
-                                            <td>Tanggal Pembayaran</td>
                                             <td>Jumlah</td>
-                                            <td>Bukti</td>
+                                            <td>Tanggal Pembayaran</td>
+                                            <td>Bukti Pembayaran</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php while ($row = $result->fetch_assoc()): ?>
+                                        <?php foreach ($payments as $payment) : ?>
                                         <tr>
-                                            <td><?php echo $row['id_pembayaran']; ?></td>
-                                            <td><?php echo $row['nama_pelanggan']; ?></td>
-                                            <td><?php echo $row['tanggal_pembayaran']; ?></td>
-                                            <td>Rp. <?php echo number_format($row['jumlah'], 0, ',', '.'); ?></td>
-                                            <td><a href="uploads/<?php echo $row['bukti']; ?>" target="_blank">Lihat Bukti</a></td>
+                                            <td><?php echo htmlspecialchars($payment['id_pembayaran']); ?></td>
+                                            <td><?php echo htmlspecialchars($payment['nama_pelanggan']); ?></td>
+                                            <td>Rp. <?php echo number_format($payment['jumlah'], 0, ',', '.'); ?></td>
+                                            <td><?php echo htmlspecialchars($payment['tanggal_pembayaran']); ?></td>
+                                            <td><a href="uploads/<?php echo htmlspecialchars($payment['bukti']); ?>" target="_blank">Lihat Bukti</a></td>
                                         </tr>
-                                        <?php endwhile; ?>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -156,21 +106,5 @@ $result = $conn->query($sql);
             </div>
         </main>
     </div>
-
-    <script>
-        const toggle = document.getElementById('nav-toggle');
-        const sidebar = document.querySelector('.sidebar');
-        const mainContent = document.querySelector('.main-content');
-
-        toggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            mainContent.classList.toggle('active');
-        });
-    </script>
 </body>
-
 </html>
-
-<?php
-$conn->close();
-?>
