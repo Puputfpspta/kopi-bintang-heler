@@ -5,9 +5,9 @@ feather.replace();
 window.addEventListener('scroll', function() {
     var navbar = document.querySelector('.navbar');
     if (window.scrollY > 0) {
-      navbar.classList.add('active');
+        navbar.classList.add('active');
     } else {
-      navbar.classList.remove('active');
+        navbar.classList.remove('active');
     }
 });
 
@@ -40,7 +40,51 @@ document.addEventListener('DOMContentLoaded', function() {
 
         searchBox.value = '';
     });
+
+    // Event listener untuk menambahkan produk ke keranjang
+    const cart = [];
+    const cartElement = document.getElementById('shopping-cart');
+
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const productCard = this.closest('.product-card');
+            const productName = productCard.getAttribute('data-name');
+            const productPrice = productCard.getAttribute('data-price');
+
+            cart.push({ name: productName, price: productPrice });
+            updateCart();
+        });
+    });
+
+    // Fungsi untuk memperbarui keranjang belanja
+    function updateCart() {
+        cartElement.innerHTML = '';
+        cart.forEach(item => {
+            const cartItem = document.createElement('div');
+            cartItem.classList.add('cart-item');
+            cartItem.innerHTML = `
+                <div class="item-detail">
+                    <h3>${item.name}</h3>
+                    <div class="item-price">Rp.${item.price}</div>
+                </div>
+                <i data-feather="trash-2" class="remove-item"></i>
+            `;
+            cartElement.appendChild(cartItem);
+        });
+        feather.replace(); // Refresh feather icons
+    }
+
+    // Event listener untuk menampilkan deskripsi produk
+    document.querySelectorAll('.item-detail-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            const productCard = this.closest('.product-card');
+            productCard.classList.toggle('show-description');
+        });
+    });
 });
+
 
 // Menghubungkan form kontak ke WhatsApp
 function submitForm(event) {
@@ -57,22 +101,3 @@ function submitForm(event) {
 
     window.open(whatsappURL, '_blank');
 }
-
-// Toggle deskripsi produk
-document.querySelectorAll('.item-detail-button').forEach(button => {
-    button.addEventListener('click', function(event) {
-        event.preventDefault();
-        const productCard = this.closest('.product-card');
-        const overlay = productCard.querySelector('.deskripsi-overlay');
-        overlay.style.display = (overlay.style.display === 'block') ? 'none' : 'block';
-    });
-});
-
-// Mematikan lampu (contoh sederhana)
-document.querySelector('#turn-off-button').addEventListener('click', function(e) {
-    const lampElement = document.querySelector('#lamp');
-    lampElement.style.backgroundColor = '#000';
-    lampElement.style.color = '#fff';
-    lampElement.innerHTML = 'Lampu Mati';
-    e.preventDefault();
-});

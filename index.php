@@ -32,8 +32,8 @@
         </div>
 
         <div class="navbar-extra">
-            <a href="#" id="search-button"><i data-feather="search"></i></a>
-            <a href="#" id="shopping-cart-button"><i data-feather="shopping-cart"></i></a>
+            <a href="#" id="search-icon"><i data-feather="search"></i></a>
+            <a href="#" id="shopping-cart-icon"><i data-feather="shopping-cart"></i></a>
         </div>
 
         <!-- Search Form -->
@@ -43,15 +43,8 @@
         </div>
 
         <!-- Shopping Cart -->
-        <div class="shopping-cart">
-            <div class="cart-item">
-                <img src="img/product/1.jpg" alt="Product 1">
-                <div class="item-detail">
-                    <h3>Product 1</h3>
-                    <div class="item-price">IDR 30K</div>
-                </div>
-                <i data-feather="trash-2" class="remove-item"></i>
-            </div>
+        <div class="shopping-cart" id="shopping-cart">
+            <!-- Cart items will be dynamically added here -->
         </div>
     </nav>
     <!-- End Navbar -->
@@ -88,9 +81,9 @@
         <p>Nikmati keistimewaan kopi bubuk Robusta Lampung kami yang diproduksi secara homemade dengan dedikasi tinggi. Dengan cita rasa khas yang tak tertandingi, setiap sajian memberikan pengalaman tiada duanya. Temukan kepuasan dalam setiap tegukan kopi Bintang Heler asli Waykanan.</p>
         <div class="row">
             <!-- Product Card 1 -->
-            <div class="product-card">
+            <div class="product-card" data-name="Robusta Petik Merah 200g" data-price="45000">
                 <div class="product-icons">
-                    <a href="#" onclick="addToCart('Robusta Petik Merah 200g', 45000)"><i data-feather="shopping-cart"></i></a>
+                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
                     <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
                 </div>
                 <div class="product-image">
@@ -107,9 +100,9 @@
             </div>
 
             <!-- Product Card 2 -->
-            <div class="product-card">
+            <div class="product-card" data-name="Robusta Premium 200g" data-price="35000">
                 <div class="product-icons">
-                    <a href="#" onclick="addToCart('Robusta Premium 200g', 35000)"><i data-feather="shopping-cart"></i></a>
+                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
                     <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
                 </div>
                 <div class="product-image">
@@ -126,9 +119,9 @@
             </div>
 
             <!-- Product Card 3 -->
-            <div class="product-card">
+            <div class="product-card" data-name="Robusta Premium 500g" data-price="70000">
                 <div class="product-icons">
-                    <a href="#" onclick="addToCart('Robusta Premium 500g', 70000)"><i data-feather="shopping-cart"></i></a>
+                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
                     <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
                 </div>
                 <div class="product-image">
