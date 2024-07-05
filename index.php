@@ -41,11 +41,29 @@
             <input type="search" id="search-box" placeholder="Cari produk...">
             <button type="button" id="search-submit-button">Cari</button>
         </div>
-
         <!-- Shopping Cart -->
-        <div class="shopping-cart" id="shopping-cart">
-            <!-- Cart items will be dynamically added here -->
+        <div id="shopping-cart" class="shopping-cart">
+    <h2>Keranjang Belanja</h2>
+    <div class="cart-items">
+        <div class="cart-item">
+            <img src="img/product/robutsa premium.jpg" alt="Robusta Premium">
+            <div class="item-detail">
+                <h3>Robusta Premium 200g</h3>
+                <div class="item-price">Rp.35000</div>
+            </div>
+            <i data-feather="trash-2" class="remove-item"></i>
         </div>
+    </div>
+    <div class="cart-total">
+        <strong>Total:</strong>
+        <span id="cart-total-price">Rp.35000</span>
+    </div>
+    <button id="checkout-button" class="button">Checkout</button>
+</div>
+
+
+
+</div>
     </nav>
     <!-- End Navbar -->
 
@@ -182,10 +200,7 @@
     <!-- End Footer -->
 
     <!-- Scripts -->
-    <script src="js/main.js"></script>
-    <script>
-        feather.replace(); // Replace feather icons
-    </script>
+    <script src="https://unpkg.com/feather-icons"></script>
     <script src="js/script.js"></script>
 </body>
 </html>
