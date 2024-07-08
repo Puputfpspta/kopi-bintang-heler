@@ -9,14 +9,14 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,700;1,700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,700&family=Laila:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
 
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/common.css">
 </head>
 <body>
     <!-- Navbar -->
@@ -41,29 +41,6 @@
             <input type="search" id="search-box" placeholder="Cari produk...">
             <button type="button" id="search-submit-button">Cari</button>
         </div>
-        <!-- Shopping Cart -->
-        <div id="shopping-cart" class="shopping-cart">
-    <h2>Keranjang Belanja</h2>
-    <div class="cart-items">
-        <div class="cart-item">
-            <img src="img/product/robutsa premium.jpg" alt="Robusta Premium">
-            <div class="item-detail">
-                <h3>Robusta Premium 200g</h3>
-                <div class="item-price">Rp.35000</div>
-            </div>
-            <i data-feather="trash-2" class="remove-item"></i>
-        </div>
-    </div>
-    <div class="cart-total">
-        <strong>Total:</strong>
-        <span id="cart-total-price">Rp.35000</span>
-    </div>
-    <button id="checkout-button" class="button">Checkout</button>
-</div>
-
-
-
-</div>
     </nav>
     <!-- End Navbar -->
 
@@ -87,75 +64,98 @@
             <div class="content">
                 <h3>Kenapa memilih kopi kami?</h3>
                 <p>Kopi bubuk Robusta Lampung berkualitas tinggi, dihasilkan secara homemade dengan komitmen dan dedikasi kami. Rasakan keistimewaan cita rasa khas Lampung yang tak tertandingi dalam setiap tegukan. Hanya di kopi Bintang Heler asli Waykanan.</p>
-                <p>Kopi Robusta merupakan salah satu varietas kopi yang paling terkenal dan paling sering ditemukan, terutama di Indonesia. Kami memproduksi kopi dengan memilih biji kopi berkualitas sehingga akan menghasilkan cita rasa yang nikmat. Melalui proses roasting yang tepat, kami menambah khas kopi asli Waykanan ini menjadi semakin mantap. </p>
+                <p>Kopi Robusta merupakan salah satu varietas kopi yang paling terkenal dan paling sering ditemukan, terutama di Indonesia. Kami memproduksi kopi dengan memilih biji kopi berkualitas sehingga akan menghasilkan cita rasa yang nikmat. Melalui proses roasting yang tepat, kami menambah khas kopi asli Waykanan ini menjadi semakin mantap.</p>
             </div>
         </div>
     </section>
     <!-- End About Section -->
 
     <!-- Product Section -->
-    <section id="product" class="product">
-        <h2><span>Produk</span> Kami</h2>
-        <p>Nikmati keistimewaan kopi bubuk Robusta Lampung kami yang diproduksi secara homemade dengan dedikasi tinggi. Dengan cita rasa khas yang tak tertandingi, setiap sajian memberikan pengalaman tiada duanya. Temukan kepuasan dalam setiap tegukan kopi Bintang Heler asli Waykanan.</p>
-        <div class="row">
-            <!-- Product Card 1 -->
-            <div class="product-card" data-name="Robusta Petik Merah 200g" data-price="45000">
-                <div class="product-icons">
-                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
-                    <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
-                </div>
-                <div class="product-image">
-                    <img src="img/product/robutsa petik merah.jpg" alt="Robusta Petik Merah" class="product-card-img">
-                    <div class="deskripsi-overlay">
-                        <p>Kopi Petik Merah adalah varian dari kopi Bintang Heler yang terbuat dari biji kopi pilihan yang berwarna merah seluruhnya. Rasanya pun lebih premium dan sudah diakui oleh penikmat kopi Indonesia.</p>
-                    </div>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-card-title">Robusta Petik Merah</h3>
-                    <h4 class="product-card-subtitle">200g</h4>
-                    <div class="product-price">Rp.45.000</div>
-                </div>
-            </div>
+<section id="product" class="product">
+  <h2><span>Produk</span> Kami</h2>
+  <p>Nikmati keistimewaan kopi bubuk Robusta Lampung kami yang diproduksi secara homemade dengan dedikasi tinggi. Dengan cita rasa khas yang tak tertandingi, setiap sajian memberikan pengalaman tiada duanya. Temukan kepuasan dalam setiap tegukan kopi Bintang Heler asli Waykanan.</p>
+  <div class="row">
+    <!-- Product Card 1 -->
+    <div class="product-card" data-name="Robusta Petik Merah 200g" data-price="45000" data-weight="200">
+      <div class="product-icons">
+        <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
+        <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
+      </div>
+      <div class="product-image">
+        <img src="img/product/robutsa petik merah.jpg" alt="Robusta Petik Merah" class="product-card-img">
+        <div class="deskripsi-overlay">
+          <p>Kopi Petik Merah adalah varian dari kopi Bintang Heler yang terbuat dari biji kopi pilihan yang berwarna merah seluruhnya. Rasanya pun lebih premium dan sudah diakui oleh penikmat kopi Indonesia.</p>
+        </div>
+      </div>
+      <div class="product-content">
+        <h3 class="product-card-title">Robusta Petik Merah</h3>
+        <h4 class="product-card-subtitle">200g</h4>
+        <div class="product-price">Rp.45.000</div>
+      </div>
+    </div>
 
-            <!-- Product Card 2 -->
-            <div class="product-card" data-name="Robusta Premium 200g" data-price="35000">
-                <div class="product-icons">
-                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
-                    <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
-                </div>
-                <div class="product-image">
-                    <img src="img/product/robutsa premium.jpg" alt="Robusta Premium 200g" class="product-card-img">
-                    <div class="deskripsi-overlay">
-                        <p>Kopi Robusta Premium dari Kopi Bintang Heler, menyuguhkan keistimewaan rasa yang memukau, mempersembahkan kekuatan dan karakter yang tak tertandingi dalam setiap sajian.</p>
-                    </div>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-card-title">Robusta Premium</h3>
-                    <h4 class="product-card-subtitle">200g</h4>
-                    <div class="product-price">Rp.35.000</div>
-                </div>
-            </div>
+    <!-- Product Card 2 -->
+    <div class="product-card" data-name="Robusta Premium 200g" data-price="35000" data-weight="200">
+      <div class="product-icons">
+        <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
+        <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
+      </div>
+      <div class="product-image">
+        <img src="img/product/robutsa premium.jpg" alt="Robusta Premium 200g" class="product-card-img">
+        <div class="deskripsi-overlay">
+          <p>Kopi Robusta Premium dari Kopi Bintang Heler, menyuguhkan keistimewaan rasa yang memukau, mempersembahkan kekuatan dan karakter yang tak tertandingi dalam setiap sajian.</p>
+        </div>
+      </div>
+      <div class="product-content">
+        <h3 class="product-card-title">Robusta Premium</h3>
+        <h4 class="product-card-subtitle">200g</h4>
+        <div class="product-price">Rp.35.000</div>
+      </div>
+    </div>
 
-            <!-- Product Card 3 -->
-            <div class="product-card" data-name="Robusta Premium 500g" data-price="70000">
-                <div class="product-icons">
-                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
-                    <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
-                </div>
-                <div class="product-image">
-                    <img src="img/product/robutsa premium 500g.jpg" alt="Robusta Premium 500g" class="product-card-img">
-                    <div class="deskripsi-overlay">
-                        <p>Kopi Robusta Premium dari Kopi Bintang Heler, menyuguhkan keistimewaan rasa yang memukau, mempersembahkan kekuatan dan karakter yang tak tertandingi dalam setiap sajian.</p>
-                    </div>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-card-title">Robusta Premium</h3>
-                    <h4 class="product-card-subtitle">500g</h4>
-                    <div class="product-price">Rp.70.000</div>
-                </div>
+    <!-- Product Card 3 -->
+    <div class="product-card" data-name="Robusta Premium 500g" data-price="70000" data-weight="500">
+      <div class="product-icons">
+        <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
+        <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
+      </div>
+      <div class="product-image">
+        <img src="img/product/robutsa premium 500g.jpg" alt="Robusta Premium 500g" class="product-card-img">
+        <div class="deskripsi-overlay">
+          <p>Kopi Robusta Premium dari Kopi Bintang Heler, menyuguhkan keistimewaan rasa yang memukau, mempersembahkan kekuatan dan karakter yang tak tertandingi dalam setiap sajian.</p>
+        </div>
+      </div>
+      <div class="product-content">
+        <h3 class="product-card-title">Robusta Premium</h3>
+        <h4 class="product-card-subtitle">500g</h4>
+        <div class="product-price">Rp.70.000</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- Keranjang Belanja Section -->
+    <section id="checkout-section">
+        <div id="shopping-cart" class="shopping-cart">
+            <h2>Keranjang Belanja</h2>
+            <div class="cart-items">
+                <!-- Daftar item akan dimuat di sini oleh JavaScript -->
             </div>
+            <div class="cart-total">
+                <strong>Total:</strong>
+                <span id="cart-total-price">Rp.0</span>
+            </div>
+            <div id="total-shipping-cost"></div>
+            <div class="final-total">
+                <strong>Total Pembayaran:</strong>
+                <span id="final-total-price">Rp.0</span>
+            </div>
+            <button id="checkout-button" class="button">Checkout</button>
         </div>
     </section>
+
+    <!-- End Keranjang Belanja Section -->
 
     <!-- Contact Section -->
     <section class="contact" id="contact">

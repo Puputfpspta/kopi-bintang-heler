@@ -1,91 +1,96 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Feather Icons
     feather.replace();
 
-    // Navbar Scroll
     window.addEventListener('scroll', function() {
         var navbar = document.querySelector('.navbar');
-        if (window.scrollY > 0) {
-            navbar.classList.add('active');
-        } else {
-            navbar.classList.remove('active');
+        if (navbar) {
+            if (window.scrollY > 0) {
+                navbar.classList.add('active');
+            } else {
+                navbar.classList.remove('active');
+            }
         }
     });
 
-    // Toggle Search Form
     const searchIcon = document.getElementById('search-icon');
     const searchForm = document.querySelector('.search-form');
-    searchIcon.addEventListener('click', function() {
-        searchForm.classList.toggle('active');
-    });
+    if (searchIcon && searchForm) {
+        searchIcon.addEventListener('click', function() {
+            searchForm.classList.toggle('active');
+        });
+    }
 
-    // Cart Functionality
     let cart = [];
     const cartElement = document.getElementById('shopping-cart');
     const cartItemsElement = document.querySelector('.cart-items');
     const cartTotalPriceElement = document.getElementById('cart-total-price');
+    const totalShippingCostElement = document.getElementById('total-shipping-cost');
+    const finalTotalPriceElement = document.getElementById('final-total-price');
 
     function updateCart() {
-        cartItemsElement.innerHTML = '';
-        let total = 0;
+        if (cartItemsElement) {
+            cartItemsElement.innerHTML = '';
+            let total = 0;
+            let weight = 0;
 
-        if (cart.length === 0) {
-            cartItemsElement.innerHTML = '<p>Keranjang belanja Anda kosong.</p>';
-        } else {
-            cart.forEach((item, index) => {
-                const itemTotalPrice = item.price * item.quantity;
-                total += itemTotalPrice;
-                const cartItem = document.createElement('div');
-                cartItem.classList.add('cart-item');
-                cartItem.innerHTML = `
-                    <img src="${item.imgSrc}" alt="${item.name}" class="cart-item-image">
-                    <div class="item-detail">
-                        <h3>${item.name}</h3>
-                        <div class="item-quantity">
-                            <button class="quantity-btn minus" data-index="${index}">-</button>
-                            <span>${item.quantity}</span>
-                            <button class="quantity-btn plus" data-index="${index}">+</button>
+            if (cart.length === 0) {
+                cartItemsElement.innerHTML = '<p>Keranjang belanja Anda kosong.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    const itemTotalPrice = item.price * item.quantity;
+                    total += itemTotalPrice;
+                    weight += item.weight * item.quantity;
+                    const cartItem = document.createElement('div');
+                    cartItem.classList.add('cart-item');
+                    cartItem.innerHTML = `
+                        <img src="${item.imgSrc}" alt="${item.name}" class="cart-item-image">
+                        <div class="item-detail">
+                            <h3>${item.name}</h3>
+                            <div class="item-quantity">
+                                <button class="quantity-btn minus" data-index="${index}">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="quantity-btn plus" data-index="${index}">+</button>
+                            </div>
+                            <div class="item-price">Rp.${itemTotalPrice}</div>
                         </div>
-                        <div class="item-price">Rp.${itemTotalPrice}</div>
-                    </div>
-                    <i data-feather="trash-2" class="remove-item" data-index="${index}"></i>
-                `;
-                cartItemsElement.appendChild(cartItem);
+                        <i data-feather="trash-2" class="remove-item" data-index="${index}"></i>
+                    `;
+                    cartItemsElement.appendChild(cartItem);
+                });
+            }
+
+            if (cartTotalPriceElement) cartTotalPriceElement.innerText = `Rp.${total}`;
+            if (finalTotalPriceElement) finalTotalPriceElement.innerText = `Rp.${total}`;
+            feather.replace();
+
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    cart.splice(index, 1);
+                    updateCart();
+                });
+            });
+
+            document.querySelectorAll('.quantity-btn.plus').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    cart[index].quantity++;
+                    updateCart();
+                });
+            });
+
+            document.querySelectorAll('.quantity-btn.minus').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    if (cart[index].quantity > 1) {
+                        cart[index].quantity--;
+                    } else {
+                        cart.splice(index, 1);
+                    }
+                    updateCart();
+                });
             });
         }
-
-        cartTotalPriceElement.innerText = `Rp.${total}`;
-        feather.replace(); // Refresh feather icons
-
-        // Event listeners for remove buttons
-        document.querySelectorAll('.remove-item').forEach(button => {
-            button.addEventListener('click', function() {
-                const index = this.getAttribute('data-index');
-                cart.splice(index, 1);
-                updateCart();
-            });
-        });
-
-        // Event listeners for quantity buttons
-        document.querySelectorAll('.quantity-btn.plus').forEach(button => {
-            button.addEventListener('click', function() {
-                const index = this.getAttribute('data-index');
-                cart[index].quantity++;
-                updateCart();
-            });
-        });
-
-        document.querySelectorAll('.quantity-btn.minus').forEach(button => {
-            button.addEventListener('click', function() {
-                const index = this.getAttribute('data-index');
-                if (cart[index].quantity > 1) {
-                    cart[index].quantity--;
-                } else {
-                    cart.splice(index, 1);
-                }
-                updateCart();
-            });
-        });
     }
 
     document.querySelectorAll('.add-to-cart').forEach(button => {
@@ -94,26 +99,27 @@ document.addEventListener('DOMContentLoaded', function() {
             const productCard = this.closest('.product-card');
             const productName = productCard.getAttribute('data-name');
             const productPrice = parseInt(productCard.getAttribute('data-price'));
+            const productWeight = parseInt(productCard.getAttribute('data-weight'));
             const productImgSrc = productCard.querySelector('img').getAttribute('src');
 
             const existingItemIndex = cart.findIndex(item => item.name === productName);
             if (existingItemIndex > -1) {
                 cart[existingItemIndex].quantity++;
             } else {
-                cart.push({ name: productName, price: productPrice, imgSrc: productImgSrc, quantity: 1 });
+                cart.push({ name: productName, price: productPrice, weight: productWeight, imgSrc: productImgSrc, quantity: 1 });
             }
             updateCart();
             showNotification('Produk sudah dimasukkan ke dalam keranjang belanja');
         });
     });
 
-    // Toggle Cart
     const cartIcon = document.getElementById('shopping-cart-icon');
-    cartIcon.addEventListener('click', function() {
-        cartElement.classList.toggle('active');
-    });
+    if (cartIcon && cartElement) {
+        cartIcon.addEventListener('click', function() {
+            cartElement.classList.toggle('active');
+        });
+    }
 
-    // Show Notification
     function showNotification(message) {
         const notification = document.createElement('div');
         notification.classList.add('notification');
@@ -132,12 +138,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Checkout
     const checkoutButton = document.getElementById('checkout-button');
-    checkoutButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        showCheckoutForm();
-    });
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            showCheckoutForm();
+        });
+    }
 
     function showCheckoutForm() {
         const checkoutForm = document.createElement('div');
@@ -150,12 +157,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="text" id="name" name="name" required>
                     <label for="address">Alamat:</label>
                     <input type="text" id="address" name="address" required>
-                    <label for="phone">No. Telepon:</label>
-                    <input type="text" id="phone" name="phone" required>
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                    <label for="payment-proof">Upload Bukti Pembayaran:</label>
-                    <input type="file" id="payment-proof" name="payment-proof" required>
+                    <label for="postal-code">Kode Pos:</label>
+                    <input type="text" id="postal-code" name="postal-code" required>
+                    <button type="button" id="calculate-shipping-button">Hitung Ongkir</button>
+                    <div id="shipping-cost-result"></div>
                     <button type="submit" class="button">Submit</button>
                 </form>
             </div>
@@ -172,35 +177,92 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function processCheckout(formData) {
         console.log('Checkout Data:', formData);
-        document.querySelector('.checkout-form').remove();
+        const checkoutForm = document.querySelector('.checkout-form');
+        if (checkoutForm) checkoutForm.remove();
         alert('Checkout berhasil!');
     }
 
-    // Event listener untuk menampilkan deskripsi produk
     document.querySelectorAll('.item-detail-button').forEach(button => {
         button.addEventListener('click', function(event) {
             event.preventDefault();
             const productCard = this.closest('.product-card');
-            productCard.classList.toggle('show-description');
+            const overlay = productCard.querySelector('.deskripsi-overlay');
+            if (overlay.style.display === 'none' || !overlay.style.display) {
+                overlay.style.display = 'flex';
+            } else {
+                overlay.style.display = 'none';
+            }
         });
     });
+    
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-    // Menghubungkan form kontak ke WhatsApp
-    document.getElementById('contact-form').addEventListener('submit', function(event) {
-        event.preventDefault();
+            const name = document.getElementById('nama').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('nomor').value;
+            const question = document.getElementById('pertanyaan').value;
 
-        const name = document.getElementById('nama').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('nomor').value;
-        const question = document.getElementById('pertanyaan').value;
+            const message = `Halo, saya ${name}. Email saya adalah ${email}, nomor telepon saya adalah ${phone}. Pertanyaan saya adalah: ${question}`;
 
-        const message = `Halo, saya ${name}. Email saya adalah ${email}, nomor telepon saya adalah ${phone}. Pertanyaan saya adalah: ${question}`;
+            const whatsappURL = `https://wa.me/6281288111722?text=${encodeURIComponent(message)}`;
 
-        const whatsappURL = `https://wa.me/6281288111722?text=${encodeURIComponent(message)}`;
+            window.open(whatsappURL, '_blank');
+        });
+    }
 
-        window.open(whatsappURL, '_blank');
-    });
+    const calculateShippingButton = document.getElementById('calculate-shipping-button');
+    if (calculateShippingButton) {
+        calculateShippingButton.addEventListener('click', function(event) {
+            event.preventDefault();
 
-    // Update cart on page load to ensure it's empty initially
+            const origin = '501'; // Way Kanan, Lampung
+            const destination = document.getElementById('postal-code').value; // Menggunakan Kode Pos
+            const weight = cart.reduce((acc, item) => acc + (item.weight * item.quantity), 0); // Total weight of items in cart
+            const courier = 'jne'; // Menggunakan JNE sebagai kurir
+
+            fetch('cek_ongkir.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'origin': origin,
+                    'destination': destination,
+                    'weight': weight,
+                    'courier': courier
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const shippingOptions = data.rajaongkir.results[0].costs;
+                const shippingOptionsElement = document.getElementById('shipping-cost-result');
+                shippingOptionsElement.innerHTML = '';
+
+                shippingOptions.forEach(cost => {
+                    const optionElement = document.createElement('div');
+                    optionElement.classList.add('shipping-option');
+                    optionElement.innerHTML = `
+                        <input type="radio" name="shipping-option" value="${cost.cost[0].value}" data-service="${cost.service}">
+                        <label>${cost.service} (${cost.description}): Rp.${cost.cost[0].value}</label>
+                    `;
+                    shippingOptionsElement.appendChild(optionElement);
+                });
+
+                document.querySelectorAll('input[name="shipping-option"]').forEach(option => {
+                    option.addEventListener('change', function() {
+                        const selectedCost = parseInt(this.value);
+                        const total = parseInt(cartTotalPriceElement.innerText.replace('Rp.', '').replace(',', ''));
+                        totalShippingCostElement.innerHTML = `Ongkos Kirim: Rp. ${selectedCost}`;
+                        finalTotalPriceElement.innerHTML = `Rp. ${total + selectedCost}`;
+                    });
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    }
+
     updateCart();
 });
