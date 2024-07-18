@@ -49,7 +49,6 @@ $customersCount = getCustomersCount();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/admin.css">
-
 </head>
 <body>
     <div class="sidebar">
@@ -183,15 +182,15 @@ $customersCount = getCustomersCount();
     <div id="addProductForm" style="display: none;">
         <form action="admin.php" method="post">
             <label for="nama">Nama Produk:</label><br>
-            <input type="text" id="nama" name="nama"><br>
+            <input type="text" id="nama" name="nama" required><br>
             <label for="kategori">Kategori:</label><br>
-            <input type="text" id="kategori" name="kategori"><br>
+            <input type="text" id="kategori" name="kategori" required><br>
             <label for="harga">Harga:</label><br>
-            <input type="number" id="harga" name="harga"><br>
+            <input type="number" id="harga" name="harga" required><br>
             <label for="stok">Stok:</label><br>
-            <input type="number" id="stok" name="stok"><br>
+            <input type="number" id="stok" name="stok" required><br>
             <label for="status">Status:</label><br>
-            <input type="text" id="status" name="status"><br><br>
+            <input type="text" id="status" name="status" required><br><br>
             <input type="submit" name="add_product" value="Submit">
         </form>
     </div>

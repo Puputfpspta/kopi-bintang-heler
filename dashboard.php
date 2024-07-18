@@ -1,6 +1,3 @@
-<?php
-session_start();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,11 +26,11 @@ session_start();
             <a href="#about">Tentang Kami</a>
             <a href="#product">Product</a>
             <a href="#contact">Kontak</a>
-            <a href="login.php">Login</a>
+            <a href="logout.php">Logout</a>
         </div>
         <div class="navbar-extra">
             <a href="#" id="search-icon"><i data-feather="search"></i></a>
-            <a href="login.php" id="shopping-cart-icon" onclick="toggleCart()"><i data-feather="shopping-cart"></i></a>
+            <a href="#" id="shopping-cart-icon"><i data-feather="shopping-cart"></i></a>
         </div>
         <div class="search-form">
             <input type="search" id="search-box" placeholder="Cari produk...">
@@ -76,7 +73,7 @@ session_start();
             <!-- Product Card 1 -->
             <div class="product-card" data-name="Robusta Petik Merah 200g" data-price="45000" data-weight="200">
                 <div class="product-icons">
-                    <a href="login.php" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
+                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
                     <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
                 </div>
                 <div class="product-image">
@@ -95,7 +92,7 @@ session_start();
             <!-- Product Card 2 -->
             <div class="product-card" data-name="Robusta Premium 200g" data-price="35000" data-weight="200">
                 <div class="product-icons">
-                    <a href="login.php" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
+                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
                     <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
                 </div>
                 <div class="product-image">
@@ -114,7 +111,7 @@ session_start();
             <!-- Product Card 3 -->
             <div class="product-card" data-name="Robusta Premium 500g" data-price="70000" data-weight="500">
                 <div class="product-icons">
-                    <a href="login.php" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
+                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
                     <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
                 </div>
                 <div class="product-image">
@@ -193,18 +190,21 @@ session_start();
                     <input type="text" id="postal-code" name="postal-code" placeholder="Kode Pos Anda" required>
                 </div>
                 <div class="form-group">
+                    <label for="destination">Kota Tujuan:</label>
+                    <input type="text" id="destination" name="destination" placeholder="Nama Kota Tujuan" required>
+                </div>
+                <div class="form-group">
                     <label for="courier">Kurir:</label>
                     <select id="courier" name="courier" required>
-                        <option value="jne">JNE</option>
-                        <option value="pos">POS Indonesia</option>
-                        <option value="tiki">TIKI</option>
-                        <option value="kargo">Kargo</option>
+                        <!-- Opsi kurir akan dimuat di sini oleh JavaScript -->
                     </select>
                 </div>
                 <button type="button" id="calculate-shipping">Hitung Ongkir</button>
             </form>
         </div>
     </div>
+
+    <div id="shipping-cost"></div>
 
     <!-- Contact Section -->
     <section class="contact" id="contact">
@@ -250,6 +250,6 @@ session_start();
 
     <!-- Scripts -->
     <script src="https://unpkg.com/feather-icons"></script>
-    <script src="js/home.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

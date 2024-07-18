@@ -157,23 +157,21 @@
   color: var(--primary);
 }
 
-/* Shopping Cart */
-.shopping-cart {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 300px;
-  height: 100vh;
-  background-color: #0a0a0a;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  transition: right 0.4s ease;
-  z-index: 101; /* Pastikan z-index lebih tinggi dari navbar */
-  padding: 20px;
-  overflow-y: auto;
+/* Container for both cart and shipping details */
+.shopping-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Add gap between elements */
 }
 
-.shopping-cart.active {
-  right: 0;
+/* Shopping Cart */
+.shopping-cart {
+  width: 45%; /* Adjust width to fit side by side */
+  background-color: #0a0a0a;
+  padding: 20px;
+  color: white;
+  overflow-y: auto;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .shopping-cart h2 {
@@ -195,8 +193,8 @@
 }
 
 .cart-item img {
-  width: 50px;
-  height: 50px;
+  width: 60px; /* Adjusted size */
+  height: 60px; /* Adjusted size */
   border-radius: 5px;
   margin-right: 10px;
 }
@@ -231,7 +229,7 @@
 .item-detail h3 {
   font-size: 1rem;
   margin: 0;
-  color: rgb(255, 255, 255);
+  color: white;
 }
 
 .item-detail .item-price {
@@ -255,6 +253,23 @@
   width: 70px;
 }
 
+#enter-shipping-details {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #ff9800;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#enter-shipping-details:hover {
+  background-color: #e68a00;
+}
+
 #checkout-button {
   display: block;
   width: 100%;
@@ -271,6 +286,65 @@
 #checkout-button:hover {
   background-color: #e68a00;
 }
+
+.back-to-products .icon {
+  color: yellow;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  transition: color 0.3s ease;
+}
+
+.back-to-products:hover .icon {
+  color: #2b2a23;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.form-group input, .form-group select, .form-group button {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+#calculate-shipping {
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+#calculate-shipping:hover {
+  background-color: #e68a00;
+}
+
+/* Shipping Details */
+.shipping-details {
+  width: 45%; /* Adjust width to fit side by side */
+  background-color: #0a0a0a;
+  padding: 20px;
+  color: white;
+  overflow-y: auto;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+  display: none;
+}
+
 
 /* Deskripsi Overlay */
 .deskripsi-overlay {
@@ -354,6 +428,91 @@
 .checkout-form .button:hover {
   background-color: #e6c300;
 }
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #000;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%; /* Sesuaikan nilai ini untuk mengecilkan ukuran kotak modal */
+  color: #fff;
+  border-radius: 10px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal .form-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.modal .form-group label {
+  flex: 1;
+  margin-right: 10px;
+  text-align: right;
+}
+
+.modal .form-group input,
+.modal .form-group select {
+  flex: 2;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+.modal button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ffa500;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.modal button:hover {
+  background-color: #ff8c00;
+}
+
+
 
 /* Notifikasi */
 .notification {

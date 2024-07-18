@@ -5,31 +5,70 @@ include 'db.php';
 $error = '';
 
 if (isset($_POST['login'])) {
-    $username = $_POST['username'];
+    $role = $_POST['role'];
+    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $username = isset($_POST['admin-username']) ? $_POST['admin-username'] : '';
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE username = ?");
+    echo "Role: $role<br>";
+    echo "Email: $email<br>";
+    echo "Username: $username<br>";
+    echo "Password: $password<br>";
+
+    if ($role === 'admin') {
+        $stmt = $conn->prepare("SELECT id, username, password FROM admin WHERE username = ?");
+        $stmt->bind_param("s", $username);
+    } else {
+        $stmt = $conn->prepare("SELECT id, email, password FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+    }
+
     if ($stmt === false) {
         die('Prepare failed: ' . htmlspecialchars($conn->error));
+    } else {
+        echo "Query prepared successfully<br>";
     }
-    
-    $stmt->bind_param("s", $username);
+
     $stmt->execute();
-    $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
+    if ($stmt->error) {
+        die('Execute failed: ' . htmlspecialchars($stmt->error));
+    } else {
+        echo "Query executed successfully<br>";
+    }
 
-        if (password_verify($password, $row['password'])) {
-            $_SESSION['username'] = $username;
-            header("Location: admin.php");
+    $stmt->store_result();
+    echo "Number of rows: " . $stmt->num_rows . "<br>";
+
+    if ($stmt->num_rows > 0) {
+        if ($role === 'admin') {
+            $stmt->bind_result($id, $username, $hashed_password); // Bind result variables for admin
+        } else {
+            $stmt->bind_result($id, $email, $hashed_password); // Bind result variables for user
+        }
+        $stmt->fetch(); // Fetch the result
+
+        echo "Result - ID: $id, Email: $email, Username: $username, Hashed Password: $hashed_password<br>";
+
+        if (password_verify($password, $hashed_password)) {
+            echo "Password verified!<br>";
+            $_SESSION['username'] = $role === 'admin' ? $username : $email;
+            $_SESSION['role'] = $role;
+            if ($role === 'admin') {
+                header("Location: admin.php");
+            } else {
+                header("Location: dashboard.php");
+            }
             exit();
         } else {
             $error = 'Username atau password salah';
+            echo "Password verification failed!<br>";
         }
     } else {
         $error = 'Username atau password salah';
+        echo "No user found!<br>";
     }
+
     $stmt->close();
 }
 ?>
@@ -39,8 +78,8 @@ if (isset($_POST['login'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/login.css">
     <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
@@ -48,11 +87,22 @@ if (isset($_POST['login'])) {
         <div class="login-container">
             <div class="login-form">
                 <i data-feather="coffee" class="logo"></i>
-                <h2>Please login</h2>
+                <h2>Silakan login</h2>
                 <form action="login.php" method="POST">
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" required>
+                        <label for="role">Login sebagai:</label>
+                        <select name="role" id="role" onchange="toggleRoleFields()">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div id="user-fields" class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div id="admin-fields" class="form-group" style="display: none;">
+                        <label for="admin-username">Username</label>
+                        <input type="text" id="admin-username" name="admin-username">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
@@ -63,11 +113,26 @@ if (isset($_POST['login'])) {
                     <?php endif; ?>
                     <button type="submit" name="login" class="button">Login</button>
                 </form>
+                <p><a href="register.php">Daftar Sekarang</a></p>
             </div>
         </div>
     </div>
     <script>
         feather.replace();
+        function toggleRoleFields() {
+            var role = document.getElementById('role').value;
+            if (role === 'admin') {
+                document.getElementById('user-fields').style.display = 'none';
+                document.getElementById('admin-fields').style.display = 'block';
+                document.getElementById('email').required = false;
+                document.getElementById('admin-username').required = true;
+            } else {
+                document.getElementById('user-fields').style.display = 'block';
+                document.getElementById('admin-fields').style.display = 'none';
+                document.getElementById('email').required = true;
+                document.getElementById('admin-username').required = false;
+            }
+        }
     </script>
 </body>
 </html>
