@@ -8,8 +8,8 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// Ambil data pembayaran
-$payments = getPayments();
+// Ambil data riwayat pesanan
+$history = getHistory();
 ?>
 
 <!DOCTYPE html>
@@ -17,7 +17,7 @@ $payments = getPayments();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembayaran | Kopi Bintang Heler</title>
+    <title>Riwayat Pesanan | Kopi Bintang Heler</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/admin.css">
@@ -39,11 +39,11 @@ $payments = getPayments();
                         <span>Pesanan</span></a>
                 </li>
                 <li>
-                <a href="riwayat.php"><span class="fas fa-history"></span>
-                    <span>Riwayat</span></a>
+                    <a href="riwayat.php" class="active"><span class="fas fa-history"></span>
+                        <span>Riwayat</span></a>
                 </li>
                 <li>
-                    <a href="pembayaran.php" class="active"><span class="fas fa-money-check-alt"></span>
+                    <a href="pembayaran.php"><span class="fas fa-money-check-alt"></span>
                         <span>Pembayaran</span></a>
                 </li>
                 <li>
@@ -60,7 +60,7 @@ $payments = getPayments();
                 <label for="nav-toggle">
                     <span class="fas fa-bars"></span>
                 </label>
-                Pembayaran
+                Riwayat Pesanan
             </h2>
 
             <div class="user-wrapper">
@@ -77,7 +77,7 @@ $payments = getPayments();
                 <div class="projects">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Kelola Pembayaran</h3>
+                            <h3>Riwayat Pesanan</h3>
                         </div>
 
                         <div class="card-body">
@@ -86,32 +86,38 @@ $payments = getPayments();
                                     <thead>
                                         <tr>
                                             <td>ID</td>
-                                            <td>Order ID</td>
-                                            <td>Ongkos Kirim</td>
-                                            <td>Harga Produk</td>
-                                            <td>Total Harga</td>
-                                            <td>Bukti Pembayaran</td>
-                                            <td>Tanggal Pembayaran</td>
+                                            <td>User ID</td>
+                                            <td>Nama</td>
+                                            <td>No. Handphone</td>
+                                            <td>Alamat</td>
+                                            <td>No. Rumah</td>
+                                            <td>Kode Pos</td>
+                                            <td>Kota Tujuan</td>
+                                            <td>Kurir</td>
+                                            <td>Status</td>
+                                            <td>Tanggal Pesanan</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (!empty($payments)): ?>
-                                            <?php foreach ($payments as $payment) : ?>
+                                        <?php if (!empty($history)): ?>
+                                            <?php foreach ($history as $order): ?>
                                                 <tr>
-                                                    <td><?php echo htmlspecialchars($payment['id']); ?></td>
-                                                    <td><?php echo htmlspecialchars($payment['order_id']); ?></td>
-                                                    <td>Rp. <?php echo number_format($payment['shipping_cost'], 0, ',', '.'); ?></td>
-                                                    <td>Rp. <?php echo number_format($payment['product_total_price'], 0, ',', '.'); ?></td>
-                                                    <td>Rp. <?php echo number_format($payment['total_price'], 0, ',', '.'); ?></td>
-                                                    <td>
-                                                        <a href="uploads/<?php echo htmlspecialchars($payment['payment_proof']); ?>" target="_blank">Lihat Bukti</a>
-                                                    </td>
-                                                    <td><?php echo htmlspecialchars($payment['payment_date']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['id']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['user_id']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['name']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['phone']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['address']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['house_number']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['postal_code']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['city']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['courier']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['status']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['order_date']); ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="7" style="text-align:center;">Tidak ada pembayaran.</td>
+                                                <td colspan="11" style="text-align:center;">Tidak ada riwayat pesanan.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>

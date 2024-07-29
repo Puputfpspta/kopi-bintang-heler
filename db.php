@@ -3,7 +3,7 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "kopi_bintang_heler";
-$apiKey = '9f93fe2cf091da12574d09e01b99dca4';
+$apiKey = '72dc2e39b71800e5c7a4bf318177c9ea';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

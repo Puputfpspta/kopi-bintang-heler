@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     feather.replace();
 
+    // Event scroll untuk navbar
     window.addEventListener("scroll", function () {
         var navbar = document.querySelector(".navbar");
         if (navbar) {
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Fungsi pencarian
     const searchIcon = document.getElementById("search-icon");
     const searchForm = document.querySelector(".search-form");
     const searchSubmitButton = document.getElementById("search-submit-button");
@@ -80,12 +82,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Fungsi keranjang belanja
     let cart = [];
     const cartElement = document.getElementById("shopping-cart");
     const cartItemsElement = document.querySelector(".cart-items");
     const cartTotalPriceElement = document.getElementById("total-price");
     const totalShippingCostElement = document.getElementById("shipping-price");
     const finalTotalPriceElement = document.getElementById("final-total-price");
+    const bankAccountElement = document.getElementById("bank-account");
+    const productTotalPriceElement = document.getElementById("product-total-price");
 
     function updateCart() {
         if (cartItemsElement) {
@@ -111,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <span>${item.quantity}</span>
                                 <button class="quantity-btn plus" data-index="${index}">+</button>
                             </div>
-                            <div class="item-price">Rp.${itemTotalPrice}</div>
+                            <div class="item-price">Rp.${itemTotalPrice.toLocaleString('id-ID')}</div>
                         </div>
                         <i data-feather="trash-2" class="remove-item" data-index="${index}"></i>
                     `;
@@ -119,8 +124,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
 
-            if (cartTotalPriceElement) cartTotalPriceElement.innerText = `Rp.${total}`;
-            if (finalTotalPriceElement) finalTotalPriceElement.innerText = `Rp.${total}`;
+            if (cartTotalPriceElement) cartTotalPriceElement.innerText = `Rp.${total.toLocaleString('id-ID')}`;
+            if (productTotalPriceElement) productTotalPriceElement.innerText = `Rp.${total.toLocaleString('id-ID')}`;
+            if (finalTotalPriceElement) finalTotalPriceElement.innerText = `Rp.${total.toLocaleString('id-ID')}`;
             feather.replace();
 
             document.querySelectorAll(".remove-item").forEach((button) => {
@@ -134,8 +140,15 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll(".quantity-btn.plus").forEach((button) => {
                 button.addEventListener("click", function () {
                     const index = this.getAttribute("data-index");
-                    cart[index].quantity++;
-                    updateCart();
+                    const productCard = document.querySelector(`.product-card[data-id="${cart[index].id}"]`);
+                    const stock = parseInt(productCard.getAttribute("data-stock"));
+
+                    if (cart[index].quantity < stock) {
+                        cart[index].quantity++;
+                        updateCart();
+                    } else {
+                        showNotification("Stok tidak mencukupi untuk menambah produk.");
+                    }
                 });
             });
 
@@ -157,22 +170,35 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener("click", function (event) {
             event.preventDefault();
             const productCard = this.closest(".product-card");
+            const productId = productCard.getAttribute("data-id");
             const productName = productCard.getAttribute("data-name");
             const productPrice = parseInt(productCard.getAttribute("data-price"));
             const productWeight = parseInt(productCard.getAttribute("data-weight"));
+            const productStock = parseInt(productCard.getAttribute("data-stock"));
             const productImgSrc = productCard.querySelector("img").getAttribute("src");
 
-            const existingItemIndex = cart.findIndex((item) => item.name === productName);
+            const existingItemIndex = cart.findIndex((item) => item.id === productId);
             if (existingItemIndex > -1) {
-                cart[existingItemIndex].quantity++;
+                if (cart[existingItemIndex].quantity < productStock) {
+                    cart[existingItemIndex].quantity++;
+                } else {
+                    showNotification("Stok tidak mencukupi untuk menambah produk.");
+                    return; // Menghentikan eksekusi jika stok tidak mencukupi
+                }
             } else {
-                cart.push({
-                    name: productName,
-                    price: productPrice,
-                    weight: productWeight,
-                    imgSrc: productImgSrc,
-                    quantity: 1,
-                });
+                if (productStock > 0) {
+                    cart.push({
+                        id: productId,
+                        name: productName,
+                        price: productPrice,
+                        weight: productWeight,
+                        imgSrc: productImgSrc,
+                        quantity: 1,
+                    });
+                } else {
+                    showNotification("Stok tidak mencukupi untuk menambah produk.");
+                    return; // Menghentikan eksekusi jika stok tidak mencukupi
+                }
             }
             updateCart();
             showNotification("Produk sudah dimasukkan ke dalam keranjang belanja");
@@ -187,136 +213,241 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function showNotification(message) {
+        // Hapus notifikasi yang sudah ada sebelum menambahkan notifikasi baru
+        document.querySelectorAll(".notification").forEach(notification => notification.remove());
+
         const notification = document.createElement("div");
         notification.classList.add("notification");
         notification.innerHTML = `
             <div class="notification-content">
-                <i data-feather="check-circle"></i>
+                <i data-feather="info"></i>
                 <p>${message}</p>
-                <button class="button" id="notification-ok-button">OK</button>
+                <button class="button notification-ok-button">OK</button>
             </div>
         `;
         document.body.appendChild(notification);
         feather.replace();
 
-        document.getElementById("notification-ok-button").addEventListener("click", function () {
-            notification.remove();
-        });
+        // Cari tombol OK di dalam notifikasi yang baru dibuat
+        const notificationOkButton = notification.querySelector(".notification-ok-button");
+        if (notificationOkButton) {
+            notificationOkButton.addEventListener("click", function () {
+                notification.remove();
+            });
+        }
     }
 
     const courierSelect = document.getElementById('courier');
-
-    fetch('cek_ongkir.php', {
-        method: 'POST',
-        body: new URLSearchParams('get_couriers=true')
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Courier Data: ", data); // Log data kurir untuk debugging
-        if (data.couriers) {
-            data.couriers.forEach(courier => {
-                var option = document.createElement('option');
-                option.value = courier;
-                option.textContent = courier.toUpperCase();
-                courierSelect.appendChild(option);
-            });
-        }
-    })
-    .catch(error => console.error('Error:', error));
-
-    document.getElementById('calculate-shipping').addEventListener('click', function () {
-        var destination = document.getElementById('destination').value;
-        var courier = document.getElementById('courier').value;
-
-        var formData = new FormData();
-        formData.append('cek_ongkir', true);
-        formData.append('destination', destination);
-        formData.append('courier', courier);
-
+    if (courierSelect) {
         fetch('cek_ongkir.php', {
             method: 'POST',
-            body: formData
+            body: new URLSearchParams('get_couriers=true')
         })
-        .then(response => {
-            return response.text().then(text => {
-                console.log("Response Text: ", text); // Log respons untuk debugging
-                if (text.trim() === "") {
-                    throw new Error("Empty response");
-                }
-                try {
-                    return JSON.parse(text);
-                } catch (error) {
-                    console.error("JSON parsing error: ", error, text); // Log detail error
-                    throw new Error("Invalid JSON: " + text);
-                }
-            });
-        })
+        .then(response => response.json())
         .then(data => {
-            var costElement = document.getElementById('shipping-cost');
-            var totalShippingCostElement = document.getElementById('shipping-price');
-            var finalTotalPriceElement = document.getElementById('final-total-price');
-            
-            costElement.innerHTML = '';
-            var totalShippingCost = 0;
-
-            if (data.error) {
-                costElement.innerHTML = data.error;
-            } else if (data.rajaongkir && data.rajaongkir.results) {
-                var results = data.rajaongkir.results;
-                if (results.length > 0 && results[0].costs.length > 0) {
-                    results.forEach(result => {
-                        result.costs.forEach(cost => {
-                            totalShippingCost += cost.cost[0].value;
-                            costElement.innerHTML += `<div>
-                                <strong>Kurir: ${result.name}</strong><br>
-                                Service: ${cost.service}<br>
-                                Description: ${cost.description}<br>
-                                Cost: Rp ${cost.cost[0].value.toLocaleString('id-ID')}<br>
-                                Estimated Delivery Time: ${cost.cost[0].etd} days<br><br>
-                            </div>`;
-                        });
-                    });
-                    if (totalShippingCostElement) totalShippingCostElement.innerText = `Rp.${totalShippingCost.toLocaleString('id-ID')}`;
-                    if (finalTotalPriceElement && cartTotalPriceElement) finalTotalPriceElement.innerText = `Rp.${(parseInt(cartTotalPriceElement.innerText.replace('Rp.','').replace('.','')) + totalShippingCost).toLocaleString('id-ID')}`;
-                } else {
-                    costElement.innerHTML = "Tidak ada hasil yang ditemukan.";
-                    if (totalShippingCostElement) totalShippingCostElement.innerText = "Rp.0";
-                    if (finalTotalPriceElement && cartTotalPriceElement) finalTotalPriceElement.innerText = `Rp.${parseInt(cartTotalPriceElement.innerText.replace('Rp.','').replace('.','')).toLocaleString('id-ID')}`;
-                }
-            } else {
-                costElement.innerHTML = "Tidak ada hasil yang ditemukan.";
-                if (totalShippingCostElement) totalShippingCostElement.innerText = "Rp.0";
-                if (finalTotalPriceElement && cartTotalPriceElement) finalTotalPriceElement.innerText = `Rp.${parseInt(cartTotalPriceElement.innerText.replace('Rp.','').replace('.','')).toLocaleString('id-ID')}`;
+            if (data.couriers && Array.isArray(data.couriers)) {
+                data.couriers.forEach(courier => {
+                    var option = document.createElement('option');
+                    option.value = courier;
+                    option.textContent = courier.toUpperCase();
+                    courierSelect.appendChild(option);
+                });
             }
         })
         .catch(error => console.error('Error:', error));
-    });
+    }
+
+    const calculateShippingButton = document.getElementById('calculate-shipping');
+    if (calculateShippingButton) {
+        calculateShippingButton.addEventListener('click', function () {
+            var destination = document.getElementById('destination').value;
+            var courier = document.getElementById('courier').value;
+            var name = document.getElementById('name').value;
+            var phone = document.getElementById('phone').value;
+            var address = document.getElementById('address').value;
+            var house_number = document.getElementById('house-number').value;
+            var postal_code = document.getElementById('postal-code').value;
+            var user_id = 1; // Ganti dengan user_id yang benar dari sesi atau variabel lain
+
+            var totalWeight = cart.reduce((total, item) => total + (item.weight * item.quantity), 0);
+
+            if (totalWeight <= 0) {
+                alert("Total weight must be greater than zero.");
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('cek_ongkir', true);
+            formData.append('destination', destination);
+            formData.append('courier', courier);
+            formData.append('name', name);
+            formData.append('phone', phone);
+            formData.append('address', address);
+            formData.append('house_number', house_number);
+            formData.append('postal_code', postal_code);
+            formData.append('total_weight', totalWeight);
+            formData.append('product_total_price', cartTotalPriceElement ? cartTotalPriceElement.innerText.replace('Rp.', '').replace(/\./g, '') : '0');
+            formData.append('user_id', user_id); // Kirim user_id ke server
+
+            fetch('cek_ongkir.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var costElement = document.getElementById('shipping-cost');
+                var totalShippingCostElement = document.getElementById('shipping-price');
+                var finalTotalPriceElement = document.getElementById('final-total-price');
+                var bankAccountElement = document.getElementById('bank-account');
+
+                if (costElement && totalShippingCostElement && finalTotalPriceElement && bankAccountElement) {
+                    if (data.error) {
+                        showNotification(data.error);
+                    } else {
+                        var totalShippingCost = data.shipping_cost;
+                        costElement.innerHTML = `<strong>Ongkos Kirim:</strong> Rp.${totalShippingCost.toLocaleString('id-ID')}`;
+                        totalShippingCostElement.innerText = `Rp.${totalShippingCost.toLocaleString('id-ID')}`;
+                        console.log("shippingPriceElement after calculation:", totalShippingCostElement.innerText); // Log tambahan
+                        if (cartTotalPriceElement) {
+                            const cartTotal = parseInt(cartTotalPriceElement.innerText.replace('Rp.','').replace(/\./g, ''));
+                            const finalTotal = cartTotal + totalShippingCost;
+                            finalTotalPriceElement.innerText = `Rp.${finalTotal.toLocaleString('id-ID')}`;
+
+                            // Tampilkan nomor rekening
+                            bankAccountElement.innerHTML = `
+                                <strong>Nomor Rekening:</strong> ${data.bank_account}
+                            `;
+
+                            // Set order ID di form pembayaran
+                            const orderIdElement = document.getElementById('order-id');
+                            if (orderIdElement) {
+                                orderIdElement.value = data.order_id;
+                            }
+
+                            // Update hidden form elements
+                            const hiddenShippingCostElement = document.getElementById('hidden-shipping-cost');
+                            const hiddenProductTotalPriceElement = document.getElementById('hidden-product-total-price');
+                            const hiddenFinalTotalPriceElement = document.getElementById('hidden-final-total-price');
+
+                            if (hiddenShippingCostElement && totalShippingCostElement) {
+                                hiddenShippingCostElement.value = totalShippingCostElement.innerText.replace('Rp.', '').replace(/\./g, '');
+                            }
+                            if (hiddenProductTotalPriceElement && cartTotalPriceElement) {
+                                hiddenProductTotalPriceElement.value = cartTotalPriceElement.innerText.replace('Rp.', '').replace(/\./g, '');
+                            }
+                            if (hiddenFinalTotalPriceElement && finalTotalPriceElement) {
+                                hiddenFinalTotalPriceElement.value = finalTotalPriceElement.innerText.replace('Rp.', '').replace(/\./g, '');
+                            }
+                        }
+                    }
+
+                    // Tutup modal setelah perhitungan ongkir selesai
+                    const alamatPengirimanModal = document.getElementById("alamatPengirimanModal");
+                    if (alamatPengirimanModal) {
+                        alamatPengirimanModal.style.display = "none";
+                    }
+                    if (cartElement) {
+                        cartElement.scrollIntoView({ behavior: "smooth" });
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    }
 
     const paymentForm = document.getElementById("payment-form");
     if (paymentForm) {
         paymentForm.addEventListener("submit", function (event) {
             event.preventDefault();
-            const formData = new FormData(paymentForm);
-            processCheckout(formData);
+            console.log("Event submit form pembayaran dipicu"); // Log debug
+
+            const orderIdElement = document.getElementById('order-id');
+            const shippingPriceElement = document.getElementById('hidden-shipping-cost');
+            const productTotalPriceElement = document.getElementById('hidden-product-total-price');
+            const finalTotalPriceElement = document.getElementById('hidden-final-total-price');
+
+            console.log("orderIdElement:", orderIdElement ? orderIdElement.value : 'null'); // Log debug
+            console.log("shippingPriceElement:", shippingPriceElement ? shippingPriceElement.value : 'null'); // Log debug
+            console.log("productTotalPriceElement:", productTotalPriceElement ? productTotalPriceElement.value : 'null'); // Log debug
+            console.log("finalTotalPriceElement:", finalTotalPriceElement ? finalTotalPriceElement.value : 'null'); // Log debug
+
+            // Cek ulang shippingPriceElement
+            const updatedShippingPriceElement = document.getElementById('hidden-shipping-cost');
+            console.log("Updated shippingPriceElement:", updatedShippingPriceElement ? updatedShippingPriceElement.value : 'null'); // Log tambahan
+
+            if (orderIdElement && updatedShippingPriceElement && productTotalPriceElement && finalTotalPriceElement) {
+                const formData = new FormData(paymentForm);
+                formData.append('order_id', orderIdElement.value);
+                formData.append('shipping_cost', updatedShippingPriceElement.value);
+                formData.append('product_total_price', productTotalPriceElement.value);
+                formData.append('total_price', finalTotalPriceElement.value);
+                formData.append('cart', JSON.stringify(cart)); // Kirim data keranjang belanja
+
+                console.log("Form Data sebelum dikirim:", ...formData.entries()); // Debugging: Log data form sebelum dikirim
+
+                processCheckout(formData);
+            } else {
+                console.error("Error: Elemen form hilang"); // Log jika ada elemen form yang hilang
+                showNotification("Form tidak lengkap, pastikan semua elemen tersedia."); // Notifikasi ke pengguna
+            }
         });
     }
 
     function processCheckout(formData) {
-        console.log("Checkout Data:", formData);
-        const checkoutForm = document.querySelector(".checkout-form");
-        if (checkoutForm) checkoutForm.remove();
-        alert("Checkout berhasil!");
-    }
+        console.log("Proses checkout...");
+    
+        fetch('process_checkout.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Response dari server:", data);
+    
+            if (data.success) {
+                // Kurangi stok setelah checkout berhasil
+                if (data.cart && Array.isArray(data.cart)) {
+                    data.cart.forEach(item => {
+                        const productCard = document.querySelector(`.product-card[data-id="${item.id}"]`);
+                        const stock = parseInt(productCard.getAttribute("data-stock")) - item.quantity;
+                        productCard.setAttribute("data-stock", stock);
+                        const stockElement = productCard.querySelector(".product-stock");
+                        stockElement.innerText = "Stok: " + stock;
+                    });
+                } else {
+                    console.error("Cart data is missing or invalid:", data.cart);
+                }
+    
+                showNotification("Checkout berhasil!");
+                // Tutup keranjang belanja setelah checkout berhasil
+                const cartElement = document.getElementById("shopping-cart");
+                if (cartElement) {
+                    cartElement.classList.remove("active");
+                }
+                // Kosongkan keranjang setelah checkout
+                cart = [];
+                updateCart();
+            } else {
+                showNotification("Checkout gagal: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification("Checkout gagal.");
+        });
+    }    
 
     document.querySelectorAll(".item-detail-button").forEach((button) => {
         button.addEventListener("click", function (event) {
             event.preventDefault();
             const productCard = this.closest(".product-card");
             const overlay = productCard.querySelector(".deskripsi-overlay");
-            if (overlay.style.display === "none" || !overlay.style.display) {
-                overlay.style.display = "flex";
-            } else {
-                overlay.style.display = "none";
+            if (overlay) {
+                if (overlay.style.display === "none" || !overlay.style.display) {
+                    overlay.style.display = "flex";
+                } else {
+                    overlay.style.display = "none";
+                }
             }
         });
     });
@@ -350,16 +481,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const enterShippingDetailsButton = document.getElementById("enter-shipping-details");
     if (enterShippingDetailsButton) {
         enterShippingDetailsButton.addEventListener("click", function () {
-            document.getElementById("alamatPengirimanModal").style.display = "block";
+            const alamatPengirimanModal = document.getElementById("alamatPengirimanModal");
+            if (alamatPengirimanModal) {
+                alamatPengirimanModal.style.display = "block";
+            }
         });
     }
 
-    var modal = document.getElementById("alamatPengirimanModal");
-    var span = document.getElementsByClassName("close")[0];
+    const modal = document.getElementById("alamatPengirimanModal");
+    const span = document.getElementsByClassName("close")[0];
 
-    span.onclick = function () {
-        modal.style.display = "none";
-    };
+    if (span) {
+        span.onclick = function () {
+            if (modal) {
+                modal.style.display = "none";
+            }
+        };
+    }
 
     window.onclick = function (event) {
         if (event.target == modal) {
@@ -388,8 +526,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const password = document.getElementById('password').value;
 
             if (username === 'user' && password === 'password') {
-                loginSection.classList.add('hidden');
-                contentSection.classList.remove('hidden');
+                if (loginSection) loginSection.classList.add('hidden');
+                if (contentSection) contentSection.classList.remove('hidden');
                 document.body.classList.remove('locked');
             } else {
                 alert('Login gagal. Silakan periksa kredensial Anda dan coba lagi.');

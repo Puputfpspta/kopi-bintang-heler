@@ -10,11 +10,6 @@ if (isset($_POST['login'])) {
     $username = isset($_POST['admin-username']) ? $_POST['admin-username'] : '';
     $password = $_POST['password'];
 
-    echo "Role: $role<br>";
-    echo "Email: $email<br>";
-    echo "Username: $username<br>";
-    echo "Password: $password<br>";
-
     if ($role === 'admin') {
         $stmt = $conn->prepare("SELECT id, username, password FROM admin WHERE username = ?");
         $stmt->bind_param("s", $username);
@@ -25,48 +20,41 @@ if (isset($_POST['login'])) {
 
     if ($stmt === false) {
         die('Prepare failed: ' . htmlspecialchars($conn->error));
-    } else {
-        echo "Query prepared successfully<br>";
     }
 
     $stmt->execute();
 
     if ($stmt->error) {
         die('Execute failed: ' . htmlspecialchars($stmt->error));
-    } else {
-        echo "Query executed successfully<br>";
     }
 
     $stmt->store_result();
-    echo "Number of rows: " . $stmt->num_rows . "<br>";
 
     if ($stmt->num_rows > 0) {
         if ($role === 'admin') {
-            $stmt->bind_result($id, $username, $hashed_password); // Bind result variables for admin
+            $stmt->bind_result($id, $username, $hashed_password);
         } else {
-            $stmt->bind_result($id, $email, $hashed_password); // Bind result variables for user
+            $stmt->bind_result($id, $email, $hashed_password);
         }
-        $stmt->fetch(); // Fetch the result
-
-        echo "Result - ID: $id, Email: $email, Username: $username, Hashed Password: $hashed_password<br>";
+        $stmt->fetch();
 
         if (password_verify($password, $hashed_password)) {
-            echo "Password verified!<br>";
-            $_SESSION['username'] = $role === 'admin' ? $username : $email;
-            $_SESSION['role'] = $role;
             if ($role === 'admin') {
+                $_SESSION['username'] = $username;
+                $_SESSION['role'] = $role;
                 header("Location: admin.php");
             } else {
+                $_SESSION['user_id'] = $id;
+                $_SESSION['user_email'] = $email;
+                $_SESSION['role'] = $role;
                 header("Location: dashboard.php");
             }
             exit();
         } else {
             $error = 'Username atau password salah';
-            echo "Password verification failed!<br>";
         }
     } else {
         $error = 'Username atau password salah';
-        echo "No user found!<br>";
     }
 
     $stmt->close();

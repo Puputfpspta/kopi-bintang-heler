@@ -1,3 +1,7 @@
+<?php
+include 'db.php';
+include 'function.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +28,7 @@
         <div class="navbar-nav">
             <a href="#home">Home</a>
             <a href="#about">Tentang Kami</a>
-            <a href="#product">Product</a>
+            <a href="#product">Produk</a>
             <a href="#contact">Kontak</a>
             <a href="logout.php">Logout</a>
         </div>
@@ -57,9 +61,9 @@
                 <img src="img/tentang.jpg" alt="Tentang Kami">
             </div>
             <div class="content">
-                <h3>Kenapa harus Bintang Heler?</h3>
-                <p style="text-align: justify;">Bintang Heler, berdiri sejak 21 Juni 2023, berlokasi di Bumi Ratu, RT/RW 001/003 Bedeng Alang-alang, Kecamatan Blambangan Umpu, Kelurahan Bumi Ratu, Kabupaten Way Kanan Lampung. Bintang Heler menawarkan dua macam kopi, yaitu Robusta Petik Merah dan Robusta Premium.</p>
-                <p style="text-align: justify;">Robusta Petik Merah adalah kopi robusta yang dipanen ketika biji kopi telah matang sempurna, dikenal sebagai "petik merah". sedangkan Robusta Premium adalah jenis kopi robusta yang diproses dan dipilih dengan standar kualitas lebih tinggi dibandingkan robusta biasa. Kami memproduksi kopi dengan memilih biji kopi berkualitas tinggi untuk menghasilkan cita rasa yang nikmat. Melalui proses roasting yang tepat, kami meningkatkan keunikan rasa kopi asli Way Kanan ini menjadi semakin mantap.</p>
+                <h3>Kenapa harus memilih Bintang Heler?</h3>
+                <p style="text-align: justify;">Bintang Heler didirikan pada 21 Juni 2023 di Bumi Ratu, Way Kanan, Lampung. Kami menawarkan dua varian kopi premium, yaitu Robusta Petik Merah dan Robusta Premium. Robusta Petik Merah dipanen saat biji kopi telah matang sempurna, yang memastikan rasa yang optimal. Sementara itu, Robusta Premium diproses dengan standar kualitas tertinggi, untuk memberikan pengalaman rasa yang luar biasa. Kami memastikan setiap biji kopi yang kami produksi memenuhi standar kualitas.</p>
+                <p style="text-align: justify;">Kami berkomitmen untuk menghasilkan kopi berkualitas terbaik. Melalui proses roasting yang cermat, kami menjaga keunikan dan kekayaan cita rasa kopi kami. Nikmati perbedaan kualitas di setiap cangkir kopi Bintang Heler.</p>
             </div>
         </div>
     </section>
@@ -70,99 +74,86 @@
         <h2><span>Produk</span> Kami</h2>
         <p>Nikmati keistimewaan kopi bubuk Robusta Lampung kami yang diproduksi secara homemade dengan dedikasi tinggi. Dengan cita rasa khas yang tak tertandingi, setiap sajian memberikan pengalaman tiada duanya. Temukan kepuasan dalam setiap tegukan kopi Bintang Heler asli Waykanan.</p>
         <div class="row">
-            <!-- Product Card 1 -->
-            <div class="product-card" data-name="Robusta Petik Merah 200g" data-price="45000" data-weight="200">
-                <div class="product-icons">
-                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
-                    <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
-                </div>
-                <div class="product-image">
-                    <img src="img/product/robutsa petik merah.jpg" alt="Robusta Petik Merah" class="product-card-img">
-                    <div class="deskripsi-overlay">
-                        <p>Kopi Petik Merah adalah varian dari kopi Bintang Heler yang terbuat dari biji kopi pilihan yang berwarna merah seluruhnya. Rasanya pun lebih premium dan sudah diakui oleh penikmat kopi Indonesia.</p>
-                    </div>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-card-title">Robusta Petik Merah</h3>
-                    <h4 class="product-card-subtitle">200g</h4>
-                    <div class="product-price">Rp.45.000</div>
-                </div>
-            </div>
-
-            <!-- Product Card 2 -->
-            <div class="product-card" data-name="Robusta Premium 200g" data-price="35000" data-weight="200">
-                <div class="product-icons">
-                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
-                    <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
-                </div>
-                <div class="product-image">
-                    <img src="img/product/robutsa premium.jpg" alt="Robusta Premium 200g" class="product-card-img">
-                    <div class="deskripsi-overlay">
-                        <p>Kopi Robusta Premium dari Kopi Bintang Heler, menyuguhkan keistimewaan rasa yang memukau, mempersembahkan kekuatan dan karakter yang tak tertandingi dalam setiap sajian.</p>
-                    </div>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-card-title">Robusta Premium</h3>
-                    <h4 class="product-card-subtitle">200g</h4>
-                    <div class="product-price">Rp.35.000</div>
-                </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="product-card" data-name="Robusta Premium 500g" data-price="70000" data-weight="500">
-                <div class="product-icons">
-                    <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>
-                    <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
-                </div>
-                <div class="product-image">
-                    <img src="img/product/robutsa premium 500g.jpg" alt="Robusta Premium 500g" class="product-card-img">
-                    <div class="deskripsi-overlay">
-                        <p>Kopi Robusta Premium dari Kopi Bintang Heler, menyuguhkan keistimewaan rasa yang memukau, mempersembahkan kekuatan dan karakter yang tak tertandingi dalam setiap sajian.</p>
-                    </div>
-                </div>
-                <div class="product-content">
-                    <h3 class="product-card-title">Robusta Premium</h3>
-                    <h4 class="product-card-subtitle">500g</h4>
-                    <div class="product-price">Rp.70.000</div>
-                </div>
-            </div>
-        </div>
+            <?php
+           $products = getProducts();
+           foreach ($products as $product) {
+               echo '<div class="product-card" data-id="' . htmlspecialchars($product['id']) . '" data-name="' . htmlspecialchars($product['name']) . '" data-price="' . htmlspecialchars($product['price']) . '" data-weight="' . htmlspecialchars($product['weight']) . '" data-stock="' . htmlspecialchars($product['stock']) . '">';
+               echo '    <div class="product-icons">';
+               echo '        <a href="#" class="add-to-cart"><i data-feather="shopping-cart"></i></a>';
+               echo '        <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>';
+               echo '    </div>';
+               echo '    <div class="product-image">';
+               echo '        <img src="' . htmlspecialchars($product['image_url']) . '" alt="' . htmlspecialchars($product['name']) . '" class="product-card-img">';
+               echo '        <div class="deskripsi-overlay">';
+               echo '            <p>' . htmlspecialchars($product['description']) . '</p>';
+               echo '        </div>';
+               echo '    </div>';
+               echo '    <div class="product-content">';
+               echo '        <h3 class="product-card-title">' . htmlspecialchars($product['name']) . '</h3>';
+               echo '        <h4 class="product-card-subtitle">' . htmlspecialchars($product['weight']) . 'g</h4>';
+               echo '        <div class="product-price">Rp.' . number_format($product['price'], 0, ',', '.') . '</div>';
+               echo '        <div class="product-stock">Stok: ' . htmlspecialchars($product['stock']) . '</div>'; // Menampilkan stok produk
+               echo '    </div>';
+               echo '</div>';
+           }
+           ?>
     </section>
     <!-- End Product Section -->
 
-    <!-- Keranjang Belanja Section -->
-    <section class="shopping-container">
-        <div id="shopping-cart" class="shopping-cart">
-            <h2>Keranjang Belanja</h2>
-            <div class="cart-items">
-                <!-- Daftar item akan dimuat di sini oleh JavaScript -->
-            </div>
-            <button type="button" id="enter-shipping-details">Masukkan Alamat Pengiriman</button>
-
-            <div id="shipping-cost">
-                <strong>Ongkos Kirim:</strong> <span id="shipping-price">Rp.0</span>
-            </div>
-
-            <div id="total-payment">
-                <strong>Total Pembayaran:</strong> <span id="final-total-price">Rp.0</span>
-            </div>
-
-            <form id="payment-form" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="payment-proof">UPLOAD BUKTI PEMBAYARAN:</label>
-                    <input type="file" id="payment-proof" name="payment-proof" accept="image/*" required>
-                </div>
-                <button type="submit" id="checkout-button">Checkout</button>
-            </form>
-
-            <div class="cart-bottom">
-                <a href="#product" id="back-to-products" class="back-to-products">
-                    <i data-feather="arrow-left" class="icon"></i>
-                </a>
-            </div>
+   <!-- Keranjang Belanja Section -->
+<section class="shopping-container">
+    <div id="shopping-cart" class="shopping-cart">
+        <h2>Keranjang Belanja</h2>
+        <div class="cart-items">
+            <!-- Daftar item akan dimuat di sini oleh JavaScript -->
         </div>
-    </section>
-    <!-- End Keranjang Belanja Section -->
+        <button type="button" id="enter-shipping-details">Masukkan Alamat Pengiriman</button>
+
+        <div id="product-total-price">
+            <strong>Total Harga Produk:</strong> <span id="total-price">Rp.0</span>
+        </div>
+
+        <div id="shipping-cost">
+            <strong>Ongkos Kirim:</strong> <span id="shipping-price">Rp.0</span>
+        </div>
+
+        <div id="total-payment">
+            <strong>Total Pembayaran:</strong> <span id="final-total-price">Rp.0</span>
+        </div>
+
+        <div id="bank-account" class="highlighted-text">
+            <!-- Nomor rekening akan dimuat di sini oleh JavaScript -->
+        </div>
+        <style>
+            .highlighted-text {
+                color: yellow; /* Warna terang */
+                font-weight: bold;
+                background-color: black; /* Background yang kontras */
+                padding: 8px;
+                border-radius: 5px;
+           }
+        </style>
+
+       <!-- Bagian form pembayaran di dashboard.php -->
+<form id="payment-form" action="process_checkout.php" method="post" enctype="multipart/form-data">
+    <input type="hidden" id="order-id" name="order_id">
+    <input type="hidden" id="hidden-shipping-cost" name="shipping_cost">
+    <input type="hidden" id="hidden-product-total-price" name="product_total_price">
+    <input type="hidden" id="hidden-final-total-price" name="total_price">
+    <div class="form-group">
+        <label for="payment-proof">UPLOAD BUKTI PEMBAYARAN:</label>
+        <input type="file" id="payment-proof" name="payment-proof" accept="image/*" required>
+    </div>
+    <button type="submit" id="checkout-button">Checkout</button>
+</form>
+
+        <div class="cart-bottom">
+            <a href="#product" id="back-to-products" class="back-to-products">
+                <i data-feather="arrow-left" class="icon"></i>
+            </a>
+        </div>
+    </div>
+</section>
 
     <!-- Modal for Shipping Address -->
     <div id="alamatPengirimanModal" class="modal">
@@ -171,31 +162,31 @@
             <form id="shipping-form">
                 <div class="form-group">
                     <label for="name">Nama:</label>
-                    <input type="text" id="name" name="name" placeholder="Nama lengkap Anda" required>
+                    <input type="text" id="name" name="name" placeholder="Nama lengkap Anda" required autocomplete="name">
                 </div>
                 <div class="form-group">
                     <label for="phone">No. Handphone:</label>
-                    <input type="text" id="phone" name="phone" placeholder="Nomor HP Anda" required>
+                    <input type="tel" id="phone" name="phone" placeholder="Nomor HP Anda" required autocomplete="tel">
                 </div>
                 <div class="form-group">
                     <label for="address">Alamat:</label>
-                    <input type="text" id="address" name="address" placeholder="Alamat Anda" required>
+                    <input type="text" id="address" name="address" placeholder="Alamat Lengkap Anda" required autocomplete="street-address">
                 </div>
                 <div class="form-group">
                     <label for="house-number">No. Rumah:</label>
-                    <input type="text" id="house-number" name="house-number" placeholder="Nomor Rumah Anda" required>
+                    <input type="text" id="house-number" name="house-number" placeholder="Nomor Rumah Anda" required autocomplete="address-line1">
                 </div>
                 <div class="form-group">
                     <label for="postal-code">Kode Pos:</label>
-                    <input type="text" id="postal-code" name="postal-code" placeholder="Kode Pos Anda" required>
+                    <input type="text" id="postal-code" name="postal-code" placeholder="Kode Pos Anda" required autocomplete="postal-code">
                 </div>
                 <div class="form-group">
                     <label for="destination">Kota Tujuan:</label>
-                    <input type="text" id="destination" name="destination" placeholder="Nama Kota Tujuan" required>
+                    <input type="text" id="destination" name="destination" placeholder="Nama Kota Tujuan" required autocomplete="address-level2">
                 </div>
                 <div class="form-group">
                     <label for="courier">Kurir:</label>
-                    <select id="courier" name="courier" required>
+                    <select id="courier" name="courier" required autocomplete="shipping">
                         <!-- Opsi kurir akan dimuat di sini oleh JavaScript -->
                     </select>
                 </div>
@@ -204,13 +195,11 @@
         </div>
     </div>
 
-    <div id="shipping-cost"></div>
-
     <!-- Contact Section -->
     <section class="contact" id="contact">
         <div class="header">
             <h2>Kontak <span>Kami</span></h2>
-            <h4>Jika Anda memiliki pertanyaan atau ingin mendapatkan informasi lebih lanjut tentang layanan kami,</h4>
+            <h4>Jika Anda memiliki pertanyaan atau ingin mendapatkan informasi lebih lanjut tentang layanan atau produk kami,</h4>
             <p>jangan ragu untuk menghubungi kami melalui formulir di bawah ini. Kami siap membantu Anda dengan senang hati!</p>
         </div>
         <div class="row">

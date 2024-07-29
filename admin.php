@@ -10,13 +10,13 @@ if (!isset($_SESSION['username'])) {
 
 // Menangani penambahan produk
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
-    $nama = $_POST['nama'];
-    $kategori = $_POST['kategori'];
-    $harga = $_POST['harga'];
-    $stok = $_POST['stok'];
-    $status = $_POST['status'];
+    $name = $_POST['name'];
+    $weight = $_POST['weight'];
+    $price = $_POST['price'];
+    $stock = $_POST['stock'];
+    $image_url = $_POST['image_url'];
 
-    addProduct($nama, $kategori, $harga, $status, $stok);
+    addProduct($name, $weight, $price, $stock, $image_url);
 
     header("Location: admin.php");
     exit();
@@ -25,9 +25,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
 // Menangani penambahan stok
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_stock'])) {
     $id = $_POST['id'];
-    $stok = $_POST['stok'];
+    $stock = $_POST['stock'];
 
-    updateProductStock($id, $stok);
+    updateProductStock($id, $stock);
+
+    header("Location: admin.php");
+    exit();
+}
+
+// Menangani pengurangan stok
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['decrease_stock'])) {
+    $id = $_POST['id'];
+    $stock = $_POST['stock'];
+
+    decreaseProductStock($id, $stock);
 
     header("Location: admin.php");
     exit();
@@ -38,6 +49,7 @@ $products = getProducts();
 $ordersCount = getOrdersCount();
 $productsCount = getProductsCount();
 $customersCount = getCustomersCount();
+$historyCount = getHistoryCount();
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +61,34 @@ $customersCount = getCustomersCount();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .cards-horizontal {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .card-single {
+            background: #333;
+            padding: 20px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 280px;
+            color: #fff;
+        }
+
+        .card-single div:first-child {
+            flex-grow: 1;
+        }
+
+        .card-single div:last-child {
+            font-size: 50px;
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -65,6 +105,10 @@ $customersCount = getCustomersCount();
                 <li>
                     <a href="pesanan.php"><span class="fas fa-shopping-cart"></span>
                         <span>Pesanan</span></a>
+                </li>
+                <li>
+                    <a href="riwayat.php"><span class="fas fa-history"></span>
+                        <span>Riwayat</span></a>
                 </li>
                 <li>
                     <a href="pembayaran.php"><span class="fas fa-money-check-alt"></span>
@@ -97,10 +141,10 @@ $customersCount = getCustomersCount();
         </header>
 
         <main>
-            <div class="cards">
+            <div class="cards-horizontal">
                 <div class="card-single">
                     <div>
-                        <h1><?php echo $productsCount; ?></h1>
+                        <h1><?php echo htmlspecialchars($productsCount); ?></h1>
                         <span>Produk</span>
                     </div>
                     <div>
@@ -110,21 +154,33 @@ $customersCount = getCustomersCount();
 
                 <div class="card-single">
                     <div>
-                        <h1><?php echo $ordersCount; ?></h1>
+                        <h1><?php echo htmlspecialchars($ordersCount); ?></h1>
                         <span>Pesanan</span>
                     </div>
                     <div>
                         <span class="fas fa-shopping-cart"></span>
                     </div>
                 </div>
+            </div>
 
+            <div class="cards-horizontal">
                 <div class="card-single">
                     <div>
-                        <h1><?php echo $customersCount; ?></h1>
+                        <h1><?php echo htmlspecialchars($customersCount); ?></h1>
                         <span>Pelanggan</span>
                     </div>
                     <div>
                         <span class="fas fa-user"></span>
+                    </div>
+                </div>
+
+                <div class="card-single">
+                    <div>
+                        <h1><?php echo htmlspecialchars($historyCount); ?></h1>
+                        <span>Riwayat</span>
+                    </div>
+                    <div>
+                        <span class="fas fa-history"></span>
                     </div>
                 </div>
             </div>
@@ -134,7 +190,6 @@ $customersCount = getCustomersCount();
                     <div class="card">
                         <div class="card-header">
                             <h3>Kelola Produk Kopi</h3>
-                            <button onclick="document.getElementById('addProductForm').style.display='block'">Tambah Produk <span class="fas fa-plus"></span></button>
                         </div>
 
                         <div class="card-body">
@@ -144,54 +199,69 @@ $customersCount = getCustomersCount();
                                         <tr>
                                             <td>ID</td>
                                             <td>Nama Produk</td>
-                                            <td>Kategori</td>
+                                            <td>Berat</td>
                                             <td>Harga</td>
                                             <td>Stok</td>
-                                            <td>Status</td>
+                                            <td>Gambar</td>
                                             <td>Tambah Stok</td>
+                                            <td>Kurangi Stok</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($products as $product) : ?>
+                                        <?php if (!empty($products)): ?>
+                                            <?php foreach ($products as $product) : ?>
+                                                <tr>
+                                                    <td><?php echo htmlspecialchars($product['id']); ?></td>
+                                                    <td><?php echo htmlspecialchars($product['name']); ?></td>
+                                                    <td><?php echo htmlspecialchars($product['weight']); ?></td>
+                                                    <td>Rp. <?php echo number_format($product['price'], 0, ',', '.'); ?></td>
+                                                    <td><?php echo htmlspecialchars($product['stock']); ?></td>
+                                                    <td><img src="<?php echo htmlspecialchars($product['image_url']); ?>" width="100" height="100"></td>
+                                                    <td>
+                                                        <form action="admin.php" method="post" style="display:inline;">
+                                                            <input type="hidden" name="id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                                                            <input type="number" name="stock" min="1" required style="width: 70px;">
+                                                            <button type="submit" name="update_stock" class="button">Tambah</button>
+                                                        </form>
+                                                    </td>
+                                                    <td>
+                                                        <form action="admin.php" method="post" style="display:inline;">
+                                                            <input type="hidden" name="id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                                                            <input type="number" name="stock" min="1" required style="width: 70px;">
+                                                            <button type="submit" name="decrease_stock" class="button">Kurangi</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
                                             <tr>
-                                                <td><?php echo htmlspecialchars($product['id']); ?></td>
-                                                <td><?php echo htmlspecialchars($product['nama']); ?></td>
-                                                <td><?php echo htmlspecialchars($product['kategori']); ?></td>
-                                                <td>Rp. <?php echo number_format($product['harga'], 0, ',', '.'); ?></td>
-                                                <td><?php echo htmlspecialchars($product['stok']); ?></td>
-                                                <td><span class="status <?php echo ($product['status'] == 'Tersedia' ? 'green' : 'red'); ?>"></span> <?php echo htmlspecialchars($product['status']); ?></td>
-                                                <td>
-                                                    <form action="admin.php" method="post" style="display:inline;">
-                                                        <input type="hidden" name="id" value="<?php echo htmlspecialchars($product['id']); ?>">
-                                                        <input type="number" name="stok" min="1" required>
-                                                        <button type="submit" name="update_stock" class="button">Tambah</button>
-                                                    </form>
-                                                </td>
+                                                <td colspan="8">Tidak ada produk ditemukan.</td>
                                             </tr>
-                                        <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </main>
     </div>
 
     <div id="addProductForm" style="display: none;">
         <form action="admin.php" method="post">
-            <label for="nama">Nama Produk:</label><br>
-            <input type="text" id="nama" name="nama" required><br>
-            <label for="kategori">Kategori:</label><br>
-            <input type="text" id="kategori" name="kategori" required><br>
-            <label for="harga">Harga:</label><br>
-            <input type="number" id="harga" name="harga" required><br>
-            <label for="stok">Stok:</label><br>
-            <input type="number" id="stok" name="stok" required><br>
-            <label for="status">Status:</label><br>
-            <input type="text" id="status" name="status" required><br><br>
-            <input type="submit" name="add_product" value="Submit">
+            <label for="name">Nama Produk:</label><br>
+            <input type="text" id="name" name="name" required style="width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;"><br>
+            <label for="weight">Berat:</label><br>
+            <input type="number" id="weight" name="weight" required style="width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;"><br>
+            <label for="price">Harga:</label><br>
+            <input type="number" id="price" name="price" required style="width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;"><br>
+            <label for="stock">Stok:</label><br>
+            <input type="number" id="stock" name="stock" required style="width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;"><br>
+            <label for="image_url">Gambar URL:</label><br>
+            <input type="text" id="image_url" name="image_url" required style="width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;"><br><br>
+            <input type="submit" name="add_product" value="Submit" class="button">
         </form>
     </div>
 
