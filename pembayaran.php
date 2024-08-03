@@ -39,8 +39,8 @@ $payments = getPayments();
                         <span>Pesanan</span></a>
                 </li>
                 <li>
-                <a href="riwayat.php"><span class="fas fa-history"></span>
-                    <span>Riwayat</span></a>
+                    <a href="riwayat.php"><span class="fas fa-history"></span>
+                        <span>Riwayat</span></a>
                 </li>
                 <li>
                     <a href="pembayaran.php" class="active"><span class="fas fa-money-check-alt"></span>
@@ -86,6 +86,7 @@ $payments = getPayments();
                                     <thead>
                                         <tr>
                                             <td>ID</td>
+                                            <td>User ID</td>
                                             <td>Order ID</td>
                                             <td>Ongkos Kirim</td>
                                             <td>Harga Produk</td>
@@ -99,6 +100,7 @@ $payments = getPayments();
                                             <?php foreach ($payments as $payment) : ?>
                                                 <tr>
                                                     <td><?php echo htmlspecialchars($payment['id']); ?></td>
+                                                    <td><?php echo htmlspecialchars($payment['user_id']); ?></td>
                                                     <td><?php echo htmlspecialchars($payment['order_id']); ?></td>
                                                     <td>Rp. <?php echo number_format($payment['shipping_cost'], 0, ',', '.'); ?></td>
                                                     <td>Rp. <?php echo number_format($payment['product_total_price'], 0, ',', '.'); ?></td>
@@ -111,7 +113,7 @@ $payments = getPayments();
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="7" style="text-align:center;">Tidak ada pembayaran.</td>
+                                                <td colspan="8" style="text-align:center;">Tidak ada pembayaran.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>

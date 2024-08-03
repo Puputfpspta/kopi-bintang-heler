@@ -86,15 +86,15 @@ if (isset($_POST['login'])) {
                     </div>
                     <div id="user-fields" class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" required autocomplete="email">
                     </div>
                     <div id="admin-fields" class="form-group" style="display: none;">
                         <label for="admin-username">Username</label>
-                        <input type="text" id="admin-username" name="admin-username">
+                        <input type="text" id="admin-username" name="admin-username" autocomplete="username">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required>
+                        <input type="password" id="password" name="password" required autocomplete="current-password">
                     </div>
                     <?php if ($error): ?>
                         <div class="error"><?php echo $error; ?></div>

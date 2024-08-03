@@ -132,12 +132,20 @@ function getOrders() {
 
 function getPayments() {
     global $conn;
-    $result = $conn->query("SELECT * FROM payments");
-    if (!$result) {
-        die("Query failed: " . $conn->error);
+    $sql = "SELECT p.id, p.order_id, p.shipping_cost, p.product_total_price, p.total_price, p.payment_proof, p.payment_date, o.user_id
+            FROM payments p
+            JOIN orders o ON p.order_id = o.id";
+    $result = $conn->query($sql);
+
+    $payments = array();
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $payments[] = $row;
+        }
     }
-    return $result->fetch_all(MYSQLI_ASSOC);
+    return $payments;
 }
+
 
 function updateOrderStatus($order_id, $status) {
     global $conn;

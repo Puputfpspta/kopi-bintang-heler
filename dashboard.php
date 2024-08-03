@@ -18,8 +18,6 @@ include 'function.php';
     <!-- Custom Styles -->
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/common.css">
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <!-- Navbar -->
