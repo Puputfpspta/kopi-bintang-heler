@@ -4,24 +4,29 @@ include 'db.php';
 
 $error = '';
 
+// Tambahkan pengecekan koneksi database
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 if (isset($_POST['login'])) {
     $role = $_POST['role'];
-    $email = isset($_POST['email']) ? $_POST['email'] : '';
-    $username = isset($_POST['admin-username']) ? $_POST['admin-username'] : '';
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
 
+    // Pilih tabel berdasarkan role
     if ($role === 'admin') {
-        $stmt = $conn->prepare("SELECT id, username, password FROM admin WHERE username = ?");
-        $stmt->bind_param("s", $username);
+        $query = "SELECT id, username AS email, password FROM admin WHERE username = ?";
     } else {
-        $stmt = $conn->prepare("SELECT id, email, password FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
+        $query = "SELECT id, email, password FROM users WHERE email = ?";
     }
 
+    $stmt = $conn->prepare($query);
     if ($stmt === false) {
         die('Prepare failed: ' . htmlspecialchars($conn->error));
     }
 
+    $stmt->bind_param("s", $email);
     $stmt->execute();
 
     if ($stmt->error) {
@@ -31,16 +36,12 @@ if (isset($_POST['login'])) {
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        if ($role === 'admin') {
-            $stmt->bind_result($id, $username, $hashed_password);
-        } else {
-            $stmt->bind_result($id, $email, $hashed_password);
-        }
+        $stmt->bind_result($id, $email, $hashed_password);
         $stmt->fetch();
 
         if (password_verify($password, $hashed_password)) {
             if ($role === 'admin') {
-                $_SESSION['username'] = $username;
+                $_SESSION['username'] = $email;
                 $_SESSION['role'] = $role;
                 header("Location: admin.php");
             } else {
@@ -51,10 +52,10 @@ if (isset($_POST['login'])) {
             }
             exit();
         } else {
-            $error = 'Username atau password salah';
+            $error = 'Email atau password salah';
         }
     } else {
-        $error = 'Username atau password salah';
+        $error = 'Email atau password salah';
     }
 
     $stmt->close();
@@ -84,43 +85,33 @@ if (isset($_POST['login'])) {
                             <option value="admin">Admin</option>
                         </select>
                     </div>
-                    <div id="user-fields" class="form-group">
+                    <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required autocomplete="email">
-                    </div>
-                    <div id="admin-fields" class="form-group" style="display: none;">
-                        <label for="admin-username">Username</label>
-                        <input type="text" id="admin-username" name="admin-username" autocomplete="username">
+                        <input type="email" id="email" name="email" maxlength="30" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                        <input type="password" id="password" name="password" required>
                     </div>
                     <?php if ($error): ?>
                         <div class="error"><?php echo $error; ?></div>
                     <?php endif; ?>
                     <button type="submit" name="login" class="button">Login</button>
                 </form>
-                <p><a href="register.php">Daftar Sekarang</a></p>
+                <p>Belum punya akun? <a href="register.php">Daftar Sekarang</a></p>
             </div>
         </div>
     </div>
     <script>
         feather.replace();
         function toggleRoleFields() {
-            var role = document.getElementById('role').value;
-            if (role === 'admin') {
-                document.getElementById('user-fields').style.display = 'none';
-                document.getElementById('admin-fields').style.display = 'block';
-                document.getElementById('email').required = false;
-                document.getElementById('admin-username').required = true;
-            } else {
-                document.getElementById('user-fields').style.display = 'block';
-                document.getElementById('admin-fields').style.display = 'none';
-                document.getElementById('email').required = true;
-                document.getElementById('admin-username').required = false;
-            }
+            // Tidak ada field khusus yang perlu disembunyikan
         }
+
+        // Panggil fungsi saat halaman dimuat pertama kali
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleRoleFields();
+        });
     </script>
 </body>
 </html>

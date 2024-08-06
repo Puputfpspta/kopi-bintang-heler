@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_product'])) {
         <div class="navbar-nav">
             <a href="#home">Home</a>
             <a href="#about">Tentang Kami</a>
-            <a href="#product">Product</a>
+            <a href="#product">Produk</a>
             <a href="#contact">Kontak</a>
             <a href="login.php">Login</a>
         </div>
