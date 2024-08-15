@@ -18,14 +18,64 @@ include 'function.php';
     <!-- Custom Styles -->
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* Tambahkan gaya untuk latar belakang putih dan teks hitam di item navbar */
+        .navbar-nav a {
+            background-color: white;
+            color: black;
+            padding: 10px;
+            display: block;
+            text-decoration: none;
+            margin: 5px 0;
+        }
+        
+        .navbar-nav a:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .navbar-nav.active {
+            display: block;
+        }
+
+        .navbar-nav {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 200px;
+            text-align: right;
+        }
+
+        /* Khusus untuk tampilan mobile */
+        @media (max-width: 768px) {
+            .navbar-nav {
+                background-color: white;
+                width: 100%;
+                position: absolute;
+                top: 50px;
+                right: 0;
+                text-align: left;
+            }
+
+            .navbar-nav a {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar">
         <a href="#" class="navbar-logo">Kopi<span>BintangHeler</span>.</a>
-        <div class="navbar-nav">
+        <div class="hamburger-menu" id="hamburger-menu">
+            <i data-feather="menu"></i>
+        </div>
+        <div class="navbar-nav" id="navbar-nav">
             <a href="#home">Home</a>
             <a href="#about">Tentang Kami</a>
+            <a href="#howtoorder">Cara Order</a>
             <a href="#product">Produk</a>
             <a href="#contact">Kontak</a>
             <a href="logout.php">Logout</a>
@@ -40,6 +90,15 @@ include 'function.php';
         </div>
     </nav>
     <!-- End Navbar -->
+
+    <!-- Selamat Datang Section -->
+    <section class="welcome">
+       <div class="content">
+           <h2>Selamat <span>Datang</span> di Web Kami</h2>
+           <p>Selamat berbelanja di Kopi Bintang Heler. Temukan kopi terbaik untuk Anda!</p>
+       </div>
+    </section>
+    <!-- End Selamat Datang Section -->
 
     <!-- section hero start -->
     <section class="hero" id="home">
@@ -66,6 +125,65 @@ include 'function.php';
         </div>
     </section>
     <!-- End About Section -->
+
+    <!-- How to Order Section -->
+    <section id="howtoorder" class="howtoorder">
+        <div class="container">
+            <h2 class="title"><span>Cara</span> Order</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="number">1</div>
+                    <div class="step-content">
+                        <div class="step-header">
+                            <i data-feather="log-in" class="step-icon"></i>
+                            <h3>Login atau Daftar</h3>
+                        </div>
+                        <p>Login menggunakan akun yang sudah terdaftar. Jika belum memiliki akun, daftar terlebih dahulu.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="number">2</div>
+                    <div class="step-content">
+                        <div class="step-header">
+                            <i data-feather="shopping-cart" class="step-icon"></i>
+                            <h3>Pilih Produk</h3>
+                        </div>
+                        <p>Pilih produk yang ingin dipesan dan masukkan ke dalam keranjang belanja, selanjutnya pilih keranjang belanja yang ada di sebelah search.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="number">3</div>
+                    <div class="step-content">
+                        <div class="step-header">
+                            <i data-feather="map-pin" class="step-icon"></i>
+                            <h3>Isi Form Alamat Pengiriman</h3>
+                        </div>
+                        <p>Isi form alamat pengiriman dengan lengkap dan benar. Jika sudah terisi maka rekening owner akan muncul.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="number">4</div>
+                    <div class="step-content">
+                        <div class="step-header">
+                            <i data-feather="upload" class="step-icon"></i>
+                            <h3>Upload Bukti Pembayaran</h3>
+                        </div>
+                        <p>Lakukan Pembayaran melalui rekening owner kemudian Upload bukti pembayaran melalui form yang disediakan.</p>
+                    </div>
+                </div>
+                <div class="step center">
+                    <div class="number">5</div>
+                    <div class="step-content">
+                        <div class="step-header">
+                            <i data-feather="check-circle" class="step-icon"></i>
+                            <h3>Checkout</h3>
+                        </div>
+                        <p>Lakukan checkout untuk menyelesaikan pemesanan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Product Section -->
     <section id="product" class="product">
@@ -95,63 +213,64 @@ include 'function.php';
                echo '</div>';
            }
            ?>
+        </div>
     </section>
     <!-- End Product Section -->
 
-   <!-- Keranjang Belanja Section -->
-<section class="shopping-container">
-    <div id="shopping-cart" class="shopping-cart">
-        <h2>Keranjang Belanja</h2>
-        <div class="cart-items">
-            <!-- Daftar item akan dimuat di sini oleh JavaScript -->
-        </div>
-        <button type="button" id="enter-shipping-details">Masukkan Alamat Pengiriman</button>
+    <!-- Keranjang Belanja Section -->
+    <section class="shopping-container">
+        <div id="shopping-cart" class="shopping-cart">
+            <h2>Keranjang Belanja</h2>
+            <div class="cart-items">
+                <!-- Daftar item akan dimuat di sini oleh JavaScript -->
+            </div>
+            <button type="button" id="enter-shipping-details">Masukkan Alamat Pengiriman</button>
 
-        <div id="product-total-price">
-            <strong>Total Harga Produk:</strong> <span id="total-price">Rp.0</span>
-        </div>
+            <div id="product-total-price">
+                <strong>Total Harga Produk:</strong> <span id="total-price">Rp.0</span>
+            </div>
 
-        <div id="shipping-cost">
-            <strong>Ongkos Kirim:</strong> <span id="shipping-price">Rp.0</span>
-        </div>
+            <div id="shipping-cost">
+                <strong>Ongkos Kirim:</strong> <span id="shipping-price">Rp.0</span>
+            </div>
 
-        <div id="total-payment">
-            <strong>Total Pembayaran:</strong> <span id="final-total-price">Rp.0</span>
-        </div>
+            <div id="total-payment">
+                <strong>Total Pembayaran:</strong> <span id="final-total-price">Rp.0</span>
+            </div>
 
-        <div id="bank-account" class="highlighted-text">
-            <!-- Nomor rekening akan dimuat di sini oleh JavaScript -->
-        </div>
-        <style>
-            .highlighted-text {
-                color: yellow; /* Warna terang */
-                font-weight: bold;
-                background-color: black; /* Background yang kontras */
-                padding: 8px;
-                border-radius: 5px;
-           }
-        </style>
+            <div id="bank-account" class="highlighted-text">
+                <!-- Nomor rekening akan dimuat di sini oleh JavaScript -->
+            </div>
+            <style>
+                .highlighted-text {
+                    color: yellow; /* Warna terang */
+                    font-weight: bold;
+                    background-color: black; /* Background yang kontras */
+                    padding: 8px;
+                    border-radius: 5px;
+                }
+            </style>
 
-       <!-- Bagian form pembayaran di dashboard.php -->
-<form id="payment-form" action="process_checkout.php" method="post" enctype="multipart/form-data">
-    <input type="hidden" id="order-id" name="order_id">
-    <input type="hidden" id="hidden-shipping-cost" name="shipping_cost">
-    <input type="hidden" id="hidden-product-total-price" name="product_total_price">
-    <input type="hidden" id="hidden-final-total-price" name="total_price">
-    <div class="form-group">
-        <label for="payment-proof">UPLOAD BUKTI PEMBAYARAN:</label>
-        <input type="file" id="payment-proof" name="payment-proof" accept="image/*" required>
-    </div>
-    <button type="submit" id="checkout-button">Checkout</button>
-</form>
+            <!-- Bagian form pembayaran di dashboard.php -->
+            <form id="payment-form" action="process_checkout.php" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="order-id" name="order_id">
+                <input type="hidden" id="hidden-shipping-cost" name="shipping_cost">
+                <input type="hidden" id="hidden-product-total-price" name="product_total_price">
+                <input type="hidden" id="hidden-final-total-price" name="total_price">
+                <div class="form-group">
+                    <label for="payment-proof">UPLOAD BUKTI PEMBAYARAN:</label>
+                    <input type="file" id="payment-proof" name="payment-proof" accept="image/*" required>
+                </div>
+                <button type="submit" id="checkout-button">Checkout</button>
+            </form>
 
-        <div class="cart-bottom">
-            <a href="#product" id="back-to-products" class="back-to-products">
-                <i data-feather="arrow-left" class="icon"></i>
-            </a>
+            <div class="cart-bottom">
+                <a href="#product" id="back-to-products" class="back-to-products">
+                    <i data-feather="arrow-left" class="icon"></i>
+                </a>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- Modal for Shipping Address -->
     <div id="alamatPengirimanModal" class="modal">
@@ -238,5 +357,25 @@ include 'function.php';
     <!-- Scripts -->
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="js/script.js"></script>
+
+    <!-- JavaScript untuk Mengatur Hamburger Menu -->
+    <script>
+        // Mengatur hamburger menu toggle
+        document.getElementById('hamburger-menu').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.getElementById('navbar-nav').classList.toggle('active');
+        });
+
+        // Feather icons replace
+        feather.replace();
+
+        // Tutup hamburger menu saat item di klik dan navigasi ke bagian yang diinginkan
+        document.querySelectorAll('.navbar-nav a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                document.getElementById('hamburger-menu').classList.remove('active');
+                document.getElementById('navbar-nav').classList.remove('active');
+            });
+        });
+    </script>
 </body>
 </html>

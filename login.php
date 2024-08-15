@@ -98,14 +98,22 @@ if (isset($_POST['login'])) {
                     <?php endif; ?>
                     <button type="submit" name="login" class="button">Login</button>
                 </form>
-                <p>Belum punya akun? <a href="register.php">Daftar Sekarang</a></p>
+                <p id="register-link">Belum punya akun? <a href="register.php">Daftar Sekarang</a></p>
             </div>
         </div>
     </div>
     <script>
         feather.replace();
+
         function toggleRoleFields() {
-            // Tidak ada field khusus yang perlu disembunyikan
+            var role = document.getElementById('role').value;
+            var registerLink = document.getElementById('register-link');
+
+            if (role === 'admin') {
+                registerLink.style.display = 'none';
+            } else {
+                registerLink.style.display = 'block';
+            }
         }
 
         // Panggil fungsi saat halaman dimuat pertama kali

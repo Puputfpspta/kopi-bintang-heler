@@ -31,7 +31,7 @@ $history = getHistory();
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="admin.php"><span class="fas fa-coffee"></span>
+                    <a href="admin.php"><img src="img/coffebean.png" width="24px" height="24px" alt="kopi">
                         <span>Produk</span></a>
                 </li>
                 <li>

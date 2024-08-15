@@ -145,6 +145,63 @@ body {
   display: none;
 }
 
+/* Selamat Datang Section */
+.welcome {
+  background: linear-gradient(180deg, #000000, #4f4f4f 100%); /* Gradasi warna penuh sampai bawah */
+  color: #fff;
+  padding: 100px 0;
+  text-align: center;
+  min-height: 100vh; /* Memastikan tinggi minimum sama dengan tinggi layar */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.welcome .content h2 {
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  
+}
+
+.welcome .content h2 span {
+  color: yellow; /* Warna oranye */
+}
+
+.welcome .content p {
+  font-size: 22px;
+  margin-top: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Tambahkan animasi fade-in untuk tampilan dinamis */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.welcome .content h2,
+.welcome .content p {
+  animation: fadeIn 1.2s ease-out forwards;
+}
+
+.welcome .content p {
+  animation-delay: 0.3s;
+}
+
+/* Gambar di bawah tetap tertutupi oleh gradasi */
+.hero {
+  height: 80; /* Menjadikan hero tidak terlihat karena tertutupi */
+}
+
 /* Gaya default untuk produk */
 .product-card {
   border: 1px solid #ddd;
@@ -211,6 +268,92 @@ body {
   font-weight: 100;
   line-height: 1.6;
 }
+/* How to Order */
+.howtoorder {
+  background-color: #080808; /* Background hitam untuk menyamakan dengan web */
+  padding: 50px 0;
+  color: white;
+  text-align: center;
+}
+.howtoorder .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.howtoorder .title {
+  font-size: 2.5em;
+  margin-bottom: 30px;
+}
+.howtoorder .title span {
+  color: #f6ff00; /* Warna kuning */
+}
+.howtoorder .steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.howtoorder .step {
+  display: flex;
+  background: #2e2e2e; /* Abu-abu untuk setiap poin */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+  width: 400px; /* Mengatur lebar abu-abu */
+  text-align: left; /* Agar teks rata kiri */
+}
+.howtoorder .step.center {
+  width: 400px; /* Sama besar tapi lebar penuh */
+  margin: 0 auto; /* Menempatkan di tengah */
+}
+.howtoorder .step:hover {
+  transform: translateY(-5px);
+}
+.howtoorder .step .number {
+  background: white;
+  color: #808080;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-right: 20px;
+}
+.howtoorder .step .step-content {
+  display: flex;
+  flex-direction: column;
+}
+.howtoorder .step .step-icon {
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+}
+.howtoorder .step .step-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.howtoorder .step .step-content h3 {
+  font-size: 1.5em;
+  margin: 0;
+}
+.howtoorder .step .step-content p {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .howtoorder .step {
+    width: calc(90% - 20px);
+  }
+  .howtoorder .step.center {
+    width: calc(90% - 20px); /* Sama besar tapi lebar penuh */
+  }
+}
+
 
 /* Contact Section */
 .contact {
@@ -532,10 +675,52 @@ footer .credit a {
   display: flex;
 }
 
-/* Mobile Phone */
-@media (max-width: 450px) {
-  html {
-      font-size: 55%;
+/* Responsive Navbar for Mobile */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 10px 20px;
+    height: auto;
   }
+
+  .navbar .navbar-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    display: none;
+    width: 100%;
+  }
+
+  .navbar .navbar-nav.active {
+    display: flex;
+  }
+
+  .navbar .navbar-nav a {
+    margin: 10px 0;
+    font-size: 1.2rem;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .navbar .navbar-extra {
+    display: none;
+  }
+
+  /* Hamburger menu */
+  .navbar .hamburger-menu {
+    display: block;
+    cursor: pointer;
+    font-size: 2rem;
+    color: var(--primary);
+  }
+}
+
+/* Hamburger Menu Icon */
+.hamburger-menu {
+  display: none;
+}
+
+.hamburger-menu.active + .navbar-nav {
+  display: flex;
 }
 
