@@ -22,6 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
     exit();
 }
 
+// Menangani penghapusan produk
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_product'])) {
+    $id = $_POST['id'];
+
+    deleteProduct($id);
+
+    header("Location: admin.php");
+    exit();
+}
+
 // Menangani penambahan stok
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_stock'])) {
     $id = $_POST['id'];
@@ -61,34 +71,6 @@ $historyCount = getHistoryCount();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/admin.css">
-    <style>
-        .cards-horizontal {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .card-single {
-            background: #333;
-            padding: 20px;
-            border-radius: 5px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            width: 280px;
-            color: #fff;
-        }
-
-        .card-single div:first-child {
-            flex-grow: 1;
-        }
-
-        .card-single div:last-child {
-            font-size: 50px;
-        }
-    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -99,7 +81,7 @@ $historyCount = getHistoryCount();
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="admin.php" class="active"><span class="fas fa-coffee"></span>
+                    <a href="admin.php" class="active"> <img src="img/coffebean.png" width="24px" height="24px" alt="kopi">
                         <span>Produk</span></a>
                 </li>
                 <li>
@@ -141,55 +123,55 @@ $historyCount = getHistoryCount();
         </header>
 
         <main>
-            <div class="cards-horizontal">
-                <div class="card-single">
-                    <div>
-                        <h1><?php echo htmlspecialchars($productsCount); ?></h1>
-                        <span>Produk</span>
-                    </div>
-                    <div>
-                        <span class="fas fa-coffee"></span>
-                    </div>
-                </div>
+        <div class="cards">
+    <div class="card-single">
+        <div>
+            <h1><?php echo htmlspecialchars($productsCount); ?></h1>
+            <span>Produk</span>
+        </div>
+        <div>
+        <img src="img/coffebean.png" width="50px" height="50px" alt="kopi">
+        </div>
+    </div>
 
-                <div class="card-single">
-                    <div>
-                        <h1><?php echo htmlspecialchars($ordersCount); ?></h1>
-                        <span>Pesanan</span>
-                    </div>
-                    <div>
-                        <span class="fas fa-shopping-cart"></span>
-                    </div>
-                </div>
-            </div>
+    <div class="card-single">
+        <div>
+            <h1><?php echo htmlspecialchars($ordersCount); ?></h1>
+            <span>Pesanan</span>
+        </div>
+        <div>
+            <span class="fas fa-shopping-cart"></span>
+        </div>
+    </div>
 
-            <div class="cards-horizontal">
-                <div class="card-single">
-                    <div>
-                        <h1><?php echo htmlspecialchars($customersCount); ?></h1>
-                        <span>Pelanggan</span>
-                    </div>
-                    <div>
-                        <span class="fas fa-user"></span>
-                    </div>
-                </div>
+    <div class="card-single">
+        <div>
+            <h1><?php echo htmlspecialchars($customersCount); ?></h1>
+            <span>Pelanggan</span>
+        </div>
+        <div>
+            <span class="fas fa-user"></span>
+        </div>
+    </div>
 
-                <div class="card-single">
-                    <div>
-                        <h1><?php echo htmlspecialchars($historyCount); ?></h1>
-                        <span>Riwayat</span>
-                    </div>
-                    <div>
-                        <span class="fas fa-history"></span>
-                    </div>
-                </div>
-            </div>
+    <div class="card-single">
+        <div>
+            <h1><?php echo htmlspecialchars($historyCount); ?></h1>
+            <span>Riwayat</span>
+        </div>
+        <div>
+            <span class="fas fa-history"></span>
+        </div>
+    </div>
+</div>
+
 
             <div class="recent-grid">
                 <div class="projects">
                     <div class="card">
                         <div class="card-header">
                             <h3>Kelola Produk Kopi</h3>
+                            <button id="addProductButton">Tambah Produk</button>
                         </div>
 
                         <div class="card-body">
@@ -204,7 +186,8 @@ $historyCount = getHistoryCount();
                                             <td>Stok</td>
                                             <td>Gambar</td>
                                             <td>Tambah Stok</td>
-                                            <td>Kurangi Stok</td>
+                                            <td>Edit Stok</td>
+                                            <td>Hapus Produk</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -231,11 +214,17 @@ $historyCount = getHistoryCount();
                                                             <button type="submit" name="decrease_stock" class="button">Kurangi</button>
                                                         </form>
                                                     </td>
+                                                    <td>
+                                                        <form action="admin.php" method="post" style="display:inline;">
+                                                            <input type="hidden" name="id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                                                            <button type="submit" name="delete_product" class="button">Hapus</button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="8">Tidak ada produk ditemukan.</td>
+                                                <td colspan="9">Tidak ada produk ditemukan.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -249,27 +238,25 @@ $historyCount = getHistoryCount();
         </main>
     </div>
 
-    <div id="addProductForm" style="display: none;">
+    <div id="addProductForm">
         <form action="admin.php" method="post">
-            <label for="name">Nama Produk:</label><br>
-            <input type="text" id="name" name="name" required style="width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;"><br>
-            <label for="weight">Berat:</label><br>
-            <input type="number" id="weight" name="weight" required style="width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;"><br>
-            <label for="price">Harga:</label><br>
-            <input type="number" id="price" name="price" required style="width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;"><br>
-            <label for="stock">Stok:</label><br>
-            <input type="number" id="stock" name="stock" required style="width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;"><br>
-            <label for="image_url">Gambar URL:</label><br>
-            <input type="text" id="image_url" name="image_url" required style="width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;"><br><br>
-            <input type="submit" name="add_product" value="Submit" class="button">
+            <h2>Tambah Produk Baru</h2>
+            <label for="name">Nama Produk:</label>
+            <input type="text" name="name" required><br>
+            <label for="weight">Berat (gram):</label>
+            <input type="number" name="weight" required><br>
+            <label for="price">Harga:</label>
+            <input type="number" name="price" required><br>
+            <label for="stock">Stok:</label>
+            <input type="number" name="stock" required><br>
+            <label for="image_url">URL Gambar:</label>
+            <input type="text" name="image_url" required><br>
+            <button class="button" type="submit" name="add_product">Tambah Produk</button>
         </form>
     </div>
 
-    <script>
-        // Script untuk menampilkan form tambah produk
-        function showAddProductForm() {
-            document.getElementById('addProductForm').style.display = 'block';
-        }
-    </script>
+    <!-- Scripts -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

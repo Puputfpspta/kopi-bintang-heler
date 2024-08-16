@@ -1,3 +1,4 @@
+// File pesanan.php
 <?php
 session_start();
 include 'db.php';
@@ -10,6 +11,7 @@ if (!isset($_SESSION['username'])) {
 
 // Ambil data pesanan
 $orders = getOrders();
+$highlightId = isset($_GET['highlight_id']) ? $_GET['highlight_id'] : null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     $order_id = $_POST['order_id'];
@@ -26,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     header("Location: pesanan.php");
     exit();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -37,6 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .highlighted-row {
+            background-color: #ffcc00;
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -47,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="admin.php"><span class="fas fa-coffee"></span>
+                    <a href="admin.php"><img src="img/coffebean.png" width="24px" height="24px" alt="kopi">
                         <span>Produk</span></a>
                 </li>
                 <li>
@@ -101,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                                 <table width="100%">
                                     <thead>
                                         <tr>
-                                            <td>ID</td>
+                                            <td>Order ID</td>
                                             <td>User ID</td>
                                             <td>Nama</td>
                                             <td>No. Handphone</td>
@@ -118,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                                     <tbody>
                                         <?php if (!empty($orders)): ?>
                                             <?php foreach ($orders as $order): ?>
-                                                <tr>
+                                                <tr id="order-<?php echo $order['id']; ?>" <?php if ($order['id'] == $highlightId) echo 'class="highlighted-row"'; ?>>
                                                     <td><?php echo htmlspecialchars($order['id']); ?></td>
                                                     <td><?php echo htmlspecialchars($order['user_id']); ?></td>
                                                     <td><?php echo htmlspecialchars($order['name']); ?></td>
@@ -156,5 +164,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
             </div>
         </main>
     </div>
+
+    <?php if ($highlightId): ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var element = document.getElementById("order-<?php echo $highlightId; ?>");
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

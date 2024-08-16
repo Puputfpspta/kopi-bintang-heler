@@ -40,9 +40,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_product'])) {
     <!-- Navbar -->
     <nav class="navbar">
         <a href="#" class="navbar-logo">Kopi<span>BintangHeler</span>.</a>
-        <div class="navbar-nav">
+        <div class="hamburger-menu" id="hamburger-menu">
+            <i data-feather="menu"></i>
+        </div>
+        <div class="navbar-nav" id="navbar-nav">
             <a href="#home">Home</a>
             <a href="#about">Tentang Kami</a>
+            <a href="#howtoorder">Cara Order</a>
             <a href="#product">Produk</a>
             <a href="#contact">Kontak</a>
             <a href="login.php">Login</a>
@@ -58,7 +62,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_product'])) {
     </nav>
     <!-- End Navbar -->
 
-    <!-- section hero start -->
+   <!-- Selamat Datang Section -->
+<section class="welcome">
+   <div class="content">
+       <h2>Selamat <span>Datang</span> di Web Kami</h2>
+       <p>Selamat berbelanja di Kopi Bintang Heler. Temukan kopi terbaik untuk Anda!</p>
+   </div>
+</section>
+<!-- End Selamat Datang Section -->
+
+
+    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="content">
             <h1>Mari Nikmati Secangkir <span>Kopi</span></h1>
@@ -66,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_product'])) {
             <a href="#product" class="button">Beli Sekarang</a>
         </div>
     </section>
-    <!-- section hero end -->
+    <!-- End Hero Section -->
 
     <!-- About Section -->
     <section id="about" class="about">
@@ -79,10 +93,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_product'])) {
                 <h3>Kenapa harus memilih Bintang Heler?</h3>
                 <p style="text-align: justify;">Bintang Heler didirikan pada 21 Juni 2023 di Bumi Ratu, Way Kanan, Lampung. Kami menawarkan dua varian kopi premium, yaitu Robusta Petik Merah dan Robusta Premium. Robusta Petik Merah dipanen saat biji kopi telah matang sempurna, yang memastikan rasa yang optimal. Sementara itu, Robusta Premium diproses dengan standar kualitas tertinggi, untuk memberikan pengalaman rasa yang luar biasa. Kami memastikan setiap biji kopi yang kami produksi memenuhi standar kualitas.</p>
                 <p style="text-align: justify;">Kami berkomitmen untuk menghasilkan kopi berkualitas terbaik. Melalui proses roasting yang cermat, kami menjaga keunikan dan kekayaan cita rasa kopi kami. Nikmati perbedaan kualitas di setiap cangkir kopi Bintang Heler.</p>
-                </div>
+            </div>
         </div>
     </section>
     <!-- End About Section -->
+
+    <!-- How to Order Section -->
+    <section id="howtoorder" class="howtoorder">
+        <div class="container">
+            <h2 class="title"><span>Cara</span> Order</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="number">1</div>
+                    <div class="step-content">
+                        <div class="step-header">
+                            <i data-feather="log-in" class="step-icon"></i>
+                            <h3>Login atau Daftar</h3>
+                        </div>
+                        <p>Login menggunakan akun yang sudah terdaftar. Jika belum memiliki akun, daftar terlebih dahulu.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="number">2</div>
+                    <div class="step-content">
+                        <div class="step-header">
+                            <i data-feather="shopping-cart" class="step-icon"></i>
+                            <h3>Pilih Produk</h3>
+                        </div>
+                        <p>Pilih produk yang ingin dipesan dan masukkan ke dalam keranjang belanja, selanjutnya pilih keranjang belanja yang ada di sebelah search.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="number">3</div>
+                    <div class="step-content">
+                        <div class="step-header">
+                            <i data-feather="map-pin" class="step-icon"></i>
+                            <h3>Isi Form Alamat Pengiriman</h3>
+                        </div>
+                        <p>Isi form alamat pengiriman dengan lengkap dan benar.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="number">4</div>
+                    <div class="step-content">
+                        <div class="step-header">
+                            <i data-feather="upload" class="step-icon"></i>
+                            <h3>Upload Bukti Pembayaran</h3>
+                        </div>
+                        <p>Upload bukti pembayaran melalui form yang disediakan.</p>
+                    </div>
+                </div>
+                <div class="step center">
+                    <div class="number">5</div>
+                    <div class="step-content">
+                        <div class="step-header">
+                            <i data-feather="check-circle" class="step-icon"></i>
+                            <h3>Checkout</h3>
+                        </div>
+                        <p>Lakukan checkout untuk menyelesaikan pemesanan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End How to Order Section -->
 
     <!-- Product Section -->
     <section id="product" class="product">
@@ -107,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_product'])) {
                 echo '        <h3 class="product-card-title">' . htmlspecialchars($product['name']) . '</h3>';
                 echo '        <h4 class="product-card-subtitle">' . htmlspecialchars($product['weight']) . 'g</h4>';
                 echo '        <div class="product-price">Rp.' . number_format($product['price'], 0, ',', '.') . '</div>';
-                echo '        <div class="product-stock">Stok: ' . htmlspecialchars($product['stock']) . '</div>'; // Menampilkan stok produk
+                echo '        <div class="product-stock">Stok: ' . htmlspecialchars($product['stock']) . '</div>';
                 echo '    </div>';
                 echo '</div>';
             }
@@ -234,5 +308,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_product'])) {
     <!-- Scripts -->
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="js/home.js"></script>
+
+     <!-- JavaScript untuk Mengatur Hamburger Menu -->
+    <script>
+        // Mengatur hamburger menu toggle
+        document.getElementById('hamburger-menu').addEventListener('click', function() {
+            console.log("Hamburger menu clicked"); // Debugging
+            this.classList.toggle('active');
+            document.getElementById('navbar-nav').classList.toggle('active');
+        });
+
+        // Feather icons replace
+        feather.replace();
+
+        // Tutup hamburger menu saat item di klik dan navigasi ke bagian yang diinginkan
+        document.querySelectorAll('.navbar-nav a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                document.getElementById('hamburger-menu').classList.remove('active');
+                document.getElementById('navbar-nav').classList.remove('active');
+            });
+        });
+    </script>
 </body>
 </html>

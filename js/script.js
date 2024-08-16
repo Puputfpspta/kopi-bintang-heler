@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Feather Icons replacement
     feather.replace();
 
     // Event scroll untuk navbar
@@ -12,6 +13,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
+    // Fungsi untuk menampilkan form tambah produk
+    const addProductButton = document.getElementById("addProductButton");
+    if (addProductButton) {
+        addProductButton.addEventListener("click", function() {
+            document.getElementById("addProductForm").style.display = "flex";
+        });
+    }
 
     // Fungsi pencarian
     const searchIcon = document.getElementById("search-icon");
@@ -127,7 +136,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (cartTotalPriceElement) cartTotalPriceElement.innerText = `Rp.${total.toLocaleString('id-ID')}`;
             if (productTotalPriceElement) productTotalPriceElement.innerText = `Rp.${total.toLocaleString('id-ID')}`;
             if (finalTotalPriceElement) finalTotalPriceElement.innerText = `Rp.${total.toLocaleString('id-ID')}`;
-            feather.replace();
+            
+            feather.replace(); // Replace icons after updating the cart items
 
             document.querySelectorAll(".remove-item").forEach((button) => {
                 button.addEventListener("click", function () {
@@ -226,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         `;
         document.body.appendChild(notification);
-        feather.replace();
+        feather.replace(); // Replace icons in the notification
 
         // Cari tombol OK di dalam notifikasi yang baru dibuat
         const notificationOkButton = notification.querySelector(".notification-ok-button");
@@ -394,28 +404,51 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function processCheckout(formData) {
-        console.log("Proses checkout...");
-    
+        console.log("Proses checkout dimulai...");
+        
         fetch('process_checkout.php', {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Response dari server:", data);
+        .then(response => {
+            console.log("Response diterima, status:", response.status);
+            if (!response.ok) {
+                // Jika status bukan 200, lemparkan kesalahan
+                throw new Error("HTTP error, status = " + response.status);
+            }
+            return response.text(); // Ambil respons sebagai teks mentah
+        })
+        .then(text => {
+            console.log("Respons mentah dari server:", text);
+            let data;
+            try {
+                data = JSON.parse(text); // Coba parsing JSON
+            } catch (error) {
+                throw new Error("Kesalahan parsing JSON: " + error.message + " | Respons: " + text);
+            }
+            console.log("Data JSON dari server:", data);
     
             if (data.success) {
+                console.log("Checkout berhasil, memperbarui stok...");
                 // Kurangi stok setelah checkout berhasil
                 if (data.cart && Array.isArray(data.cart)) {
                     data.cart.forEach(item => {
                         const productCard = document.querySelector(`.product-card[data-id="${item.id}"]`);
-                        const stock = parseInt(productCard.getAttribute("data-stock")) - item.quantity;
-                        productCard.setAttribute("data-stock", stock);
-                        const stockElement = productCard.querySelector(".product-stock");
-                        stockElement.innerText = "Stok: " + stock;
+                        if (productCard) {
+                            const stock = parseInt(productCard.getAttribute("data-stock")) - item.quantity;
+                            productCard.setAttribute("data-stock", stock);
+                            const stockElement = productCard.querySelector(".product-stock");
+                            if (stockElement) {
+                                stockElement.innerText = "Stok: " + stock;
+                            } else {
+                                console.error("Elemen stok tidak ditemukan untuk product ID:", item.id);
+                            }
+                        } else {
+                            console.error("Product card tidak ditemukan untuk product ID:", item.id);
+                        }
                     });
                 } else {
-                    console.error("Cart data is missing or invalid:", data.cart);
+                    console.error("Data cart hilang atau tidak valid:", data.cart);
                 }
     
                 showNotification("Checkout berhasil!");
@@ -428,14 +461,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 cart = [];
                 updateCart();
             } else {
+                console.error("Checkout gagal, pesan error dari server:", data.message);
                 showNotification("Checkout gagal: " + data.message);
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            showNotification("Checkout gagal.");
+            console.error('Kesalahan terjadi:', error);
+            showNotification("Checkout gagal karena kesalahan: " + error.message);
         });
-    }    
+    }
+    
+    
 
     document.querySelectorAll(".item-detail-button").forEach((button) => {
         button.addEventListener("click", function (event) {
@@ -535,3 +571,4 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+

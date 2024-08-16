@@ -10,6 +10,7 @@ if (!isset($_SESSION['username'])) {
 
 // Ambil data pembayaran
 $payments = getPayments();
+$highlightId = isset($_GET['highlight_id']) ? $_GET['highlight_id'] : null;
 ?>
 
 <!DOCTYPE html>
@@ -21,6 +22,15 @@ $payments = getPayments();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .highlighted-row {
+            background-color: #ffcc00;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -31,7 +41,7 @@ $payments = getPayments();
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="admin.php"><span class="fas fa-coffee"></span>
+                    <a href="admin.php"><img src="img/coffebean.png" width="24px" height="24px" alt="kopi">
                         <span>Produk</span></a>
                 </li>
                 <li>
@@ -93,12 +103,13 @@ $payments = getPayments();
                                             <td>Total Harga</td>
                                             <td>Bukti Pembayaran</td>
                                             <td>Tanggal Pembayaran</td>
+                                            <td>Aksi</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php if (!empty($payments)): ?>
                                             <?php foreach ($payments as $payment) : ?>
-                                                <tr>
+                                                <tr <?php if ($payment['order_id'] == $highlightId) echo 'class="highlighted-row"'; ?>>
                                                     <td><?php echo htmlspecialchars($payment['id']); ?></td>
                                                     <td><?php echo htmlspecialchars($payment['user_id']); ?></td>
                                                     <td><?php echo htmlspecialchars($payment['order_id']); ?></td>
@@ -106,14 +117,17 @@ $payments = getPayments();
                                                     <td>Rp. <?php echo number_format($payment['product_total_price'], 0, ',', '.'); ?></td>
                                                     <td>Rp. <?php echo number_format($payment['total_price'], 0, ',', '.'); ?></td>
                                                     <td>
-                                                        <a href="uploads/<?php echo htmlspecialchars($payment['payment_proof']); ?>" target="_blank">Lihat Bukti</a>
+                                                        <a href="lihat_bukti.php?file=<?php echo htmlspecialchars($payment['payment_proof']); ?>&order_id=<?php echo htmlspecialchars($payment['order_id']); ?>" target="_blank" class="button">Lihat Bukti</a>
                                                     </td>
                                                     <td><?php echo htmlspecialchars($payment['payment_date']); ?></td>
+                                                    <td>
+                                                        <a href="pesanan.php?highlight_id=<?php echo htmlspecialchars($payment['order_id']); ?>" class="button">Lihat Pesanan</a>
+                                                    </td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="8" style="text-align:center;">Tidak ada pembayaran.</td>
+                                                <td colspan="9" style="text-align:center;">Tidak ada pembayaran.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>

@@ -121,7 +121,7 @@ try {
                     'order_id' => $order_id,
                     'shipping_cost' => $shipping_cost,
                     'total_cost' => $total_cost,
-                    'bank_account' => '7401787678 a.n Puput Febi Puspita'
+                    'bank_account' => 'BRI 5651 0101 3495 535 a.n Wiwien Andriani'
                 ]);
             } else {
                 echo json_encode(["error" => "Tidak ada kurir tersedia untuk kota tujuan yang dipilih. Silakan pilih kurir atau kota tujuan yang berbeda."]);
