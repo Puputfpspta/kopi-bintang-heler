@@ -38,7 +38,7 @@ body {
 }
 
 .navbar.active {
-  background: #000000; /* Warna latar belakang saat navbar aktif */
+  background: #000000;
 }
 
 .navbar .navbar-logo {
@@ -147,11 +147,11 @@ body {
 
 /* Selamat Datang Section */
 .welcome {
-  background: linear-gradient(180deg, #000000, #4f4f4f 100%); /* Gradasi warna penuh sampai bawah */
+  background: linear-gradient(180deg, #000000, #4f4f4f 100%);
   color: #fff;
   padding: 100px 0;
   text-align: center;
-  min-height: 100vh; /* Memastikan tinggi minimum sama dengan tinggi layar */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -167,11 +167,10 @@ body {
   text-transform: uppercase;
   letter-spacing: 2px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  
 }
 
 .welcome .content h2 span {
-  color: yellow; /* Warna oranye */
+  color: yellow;
 }
 
 .welcome .content p {
@@ -196,32 +195,6 @@ body {
 .welcome .content p {
   animation-delay: 0.3s;
 }
-
-/* Gambar di bawah tetap tertutupi oleh gradasi */
-.hero {
-  height: 80; /* Menjadikan hero tidak terlihat karena tertutupi */
-}
-
-/* Gaya default untuk produk */
-.product-card {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 4px;
-  transition: border 0.3s ease;
-}
-
-/* Menghapus efek visual dari produk lainnya */
-.product-card:not(.found) {
-  border: none;
-}
-
-/* Gaya untuk teks yang disorot */
-.highlight {
-  text-decoration: underline;
-  color: red;
-}
-
 
 /* About Section */
 .about {
@@ -268,9 +241,10 @@ body {
   font-weight: 100;
   line-height: 1.6;
 }
+
 /* How to Order */
 .howtoorder {
-  background-color: #080808; /* Background hitam untuk menyamakan dengan web */
+  background-color: #080808;
   padding: 50px 0;
   color: white;
   text-align: center;
@@ -284,7 +258,7 @@ body {
   margin-bottom: 30px;
 }
 .howtoorder .title span {
-  color: #f6ff00; /* Warna kuning */
+  color: #f6ff00;
 }
 .howtoorder .steps {
   display: flex;
@@ -294,17 +268,17 @@ body {
 }
 .howtoorder .step {
   display: flex;
-  background: #2e2e2e; /* Abu-abu untuk setiap poin */
+  background: #2e2e2e;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-in-out;
-  width: 400px; /* Mengatur lebar abu-abu */
-  text-align: left; /* Agar teks rata kiri */
+  width: 400px;
+  text-align: left;
 }
 .howtoorder .step.center {
-  width: 400px; /* Sama besar tapi lebar penuh */
-  margin: 0 auto; /* Menempatkan di tengah */
+  width: 400px;
+  margin: 0 auto;
 }
 .howtoorder .step:hover {
   transform: translateY(-5px);
@@ -350,10 +324,9 @@ body {
     width: calc(90% - 20px);
   }
   .howtoorder .step.center {
-    width: calc(90% - 20px); /* Sama besar tapi lebar penuh */
+    width: calc(90% - 20px);
   }
 }
-
 
 /* Contact Section */
 .contact {
@@ -680,5 +653,41 @@ footer .credit a {
   html {
       font-size: 55%;
   }
-}
 
+  .product .row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .product-card {
+    max-width: 90%;
+    margin: 1rem auto;
+  }
+
+  .shopping-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .shopping-cart, .shipping-details {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .checkout-form {
+    width: 90%;
+    padding: 2rem;
+  }
+
+  /* Tampilkan Search dan Keranjang di perangkat mobile */
+  .navbar .navbar-extra {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .navbar .search-form {
+    width: 90%;
+    right: 5%;
+  }
+}

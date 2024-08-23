@@ -5,6 +5,9 @@ if (isset($_GET['file']) && isset($_GET['order_id'])) {
 } else {
     die('Akses tidak valid');
 }
+
+$file_path = "uploads/" . $file;
+
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +58,14 @@ if (isset($_GET['file']) && isset($_GET['order_id'])) {
 </head>
 <body>
     <div class="image-container">
-        <img src="uploads/<?php echo $file; ?>" alt="Bukti Pembayaran">
+        <?php
+        // Cek apakah file ada di direktori uploads
+        if (file_exists($file_path)) {
+            echo '<img src="' . $file_path . '" alt="Bukti Pembayaran">';
+        } else {
+            echo '<p>File tidak ditemukan.</p>';
+        }
+        ?>
     </div>
     <a href="pembayaran.php?highlight_id=<?php echo $order_id; ?>" class="back-button">Kembali</a>
 </body>

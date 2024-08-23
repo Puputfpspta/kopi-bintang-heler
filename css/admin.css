@@ -364,3 +364,58 @@ tbody tr:hover {
 #addProductForm .button:hover {
   background: #e2b730;
 }
+
+.table-responsive {
+    overflow-x: hidden; /* Menghilangkan scrollbar horizontal */
+}
+
+.table-responsive table {
+    width: 100%;
+    font-size: 0.8rem; /* Ukuran font standar */
+}
+
+.table-responsive th,
+.table-responsive td {
+    padding: 0.4rem 0.5rem; /* Padding standar */
+    text-align: left;
+    white-space: nowrap; /* Mencegah teks membungkus di dalam sel tabel */
+}
+
+.table-responsive td .button {
+    padding: 0.2rem 0.5rem; /* Sesuaikan padding tombol agar lebih kecil */
+    font-size: 0.8rem; /* Sesuaikan ukuran font tombol */
+    display: inline-block;
+}
+
+/* Media Query untuk layar dengan lebar maksimal 768px (Tablet dan Ponsel) */
+@media (max-width: 768px) {
+    .table-responsive table {
+        font-size: 0.75rem; /* Ukuran font lebih kecil untuk layar lebih kecil */
+    }
+
+    .table-responsive th,
+    .table-responsive td {
+        padding: 0.3rem 0.4rem; /* Padding lebih kecil untuk layar lebih kecil */
+    }
+
+    .table-responsive td .button {
+        font-size: 0.75rem; /* Ukuran font lebih kecil untuk tombol di layar lebih kecil */
+    }
+}
+
+/* Media Query untuk layar dengan lebar maksimal 480px (Ponsel Kecil) */
+@media (max-width: 480px) {
+    .table-responsive table {
+        font-size: 0.7rem; /* Ukuran font lebih kecil untuk layar ponsel kecil */
+    }
+
+    .table-responsive th,
+    .table-responsive td {
+        padding: 0.3rem 0.4rem; /* Padding lebih kecil untuk ponsel kecil */
+    }
+
+    .table-responsive td .button {
+        font-size: 0.7rem; /* Ukuran font lebih kecil untuk tombol di ponsel kecil */
+    }
+}
+

@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("../img/bintang-heler.jpg"); /* Mengganti gambar latar belakang */
+  background-image: url("../img/bintang-heler.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -15,7 +15,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Efek gelap pada latar belakang */
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .hero .content {
@@ -31,7 +31,7 @@
 .hero .content h1 {
   font-size: 3rem;
   font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Efek bayangan teks */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   line-height: 1.2;
 }
 
@@ -44,27 +44,25 @@
   margin-top: 0.2rem;
   line-height: 1.6;
   font-weight: 300;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Efek bayangan teks */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .hero .content .button {
   display: inline-block;
-  padding: 0.5rem 2.5rem; /* Ubah padding untuk memperkecil tombol */
-  font-size: 1.2rem; /* Ubah ukuran font untuk memperkecil teks */
+  padding: 0.5rem 2.5rem;
+  font-size: 1.2rem;
   margin-top: 2rem;
   color: #fff;
   background-color: #702708;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Efek bayangan tombol */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-decoration: none;
   transition: background-color 0.3s ease;
   width: 13rem;
 }
 
 .hero .content .button:hover {
-  background-color: var(
-    --primary
-  ); /* Warna latar belakang yang berbeda saat dihover */
+  background-color: var(--primary);
 }
 
 /* Produk Section */
@@ -161,12 +159,12 @@
 .shopping-container {
   display: flex;
   justify-content: space-between;
-  gap: 20px; /* Add gap between elements */
+  gap: 20px;
 }
 
 /* Shopping Cart */
 .shopping-cart {
-  width: 45%; /* Adjust width to fit side by side */
+  width: 45%;
   background-color: #0a0a0a;
   padding: 20px;
   color: white;
@@ -193,8 +191,8 @@
 }
 
 .cart-item img {
-  width: 60px; /* Adjusted size */
-  height: 60px; /* Adjusted size */
+  width: 60px;
+  height: 60px;
   border-radius: 5px;
   margin-right: 10px;
 }
@@ -333,7 +331,7 @@
 
 /* Shipping Details */
 .shipping-details {
-  width: 45%; /* Adjust width to fit side by side */
+  width: 45%;
   background-color: #0a0a0a;
   padding: 20px;
   color: white;
@@ -344,7 +342,6 @@
 .hidden {
   display: none;
 }
-
 
 /* Deskripsi Overlay */
 .deskripsi-overlay {
@@ -361,12 +358,12 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  z-index: 10; /* Update z-index */
+  z-index: 10;
 }
 
 .product-icons {
   position: relative;
-  z-index: 20; /* Ensure the icons are above the overlay */
+  z-index: 20;
 }
 
 .product-card.show-description .deskripsi-overlay {
@@ -381,7 +378,6 @@
 .deskripsi-overlay p {
   font-size: 1rem;
 }
-
 
 /* Checkout Form */
 .checkout-form {
@@ -428,6 +424,7 @@
 .checkout-form .button:hover {
   background-color: #e6c300;
 }
+
 /* Modal Styles */
 .modal {
   display: none;
@@ -446,7 +443,7 @@
   margin: 10% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 30%; /* Sesuaikan nilai ini untuk mengecilkan ukuran kotak modal */
+  width: 30%;
   color: #fff;
   border-radius: 10px;
 }
@@ -512,8 +509,6 @@
   background-color: #ff8c00;
 }
 
-
-
 /* Notifikasi */
 .notification {
   position: fixed;
@@ -546,4 +541,36 @@
   padding: 0.5rem 1rem;
   border-radius: 5px;
   cursor: pointer;
+}
+
+/* Mobile Phone */
+@media (max-width: 450px) {
+  html {
+      font-size: 55%;
+  }
+
+  .product .row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .product-card {
+    max-width: 90%;
+    margin: 1rem auto;
+  }
+
+  .shopping-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .shopping-cart, .shipping-details {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .checkout-form {
+    width: 90%;
+    padding: 2rem;
+  }
 }

@@ -4,8 +4,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 try {
-    // Ganti 'database_name' dengan nama database yang benar
-    $conn = new mysqli("localhost", "root", "", "kopi_bintang_heler");
+    // Koneksi ke database
+    $conn = new mysqli("localhost", "u140589105_kopi", "Kopi12345.", "u140589105_kopi");
 
     if ($conn->connect_error) {
         throw new Exception("Connection failed: " . $conn->connect_error);
@@ -51,10 +51,25 @@ try {
 
     // Upload file bukti pembayaran
     $target_dir = "uploads/";
-    $target_file = $target_dir . basename($payment_proof);
+    
+    // Pastikan direktori uploads ada dan bisa ditulis
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0755, true);
+    }
+    
+    // Cek error saat upload file
+    if ($_FILES['payment-proof']['error'] !== UPLOAD_ERR_OK) {
+        throw new Exception("Error uploading file: " . $_FILES['payment-proof']['error']);
+    }
+
+    // Menggunakan nama file asli tanpa pengacakan
+    $target_file = $target_dir . basename($_FILES['payment-proof']['name']);
 
     if (!move_uploaded_file($_FILES["payment-proof"]["tmp_name"], $target_file)) {
         throw new Exception("Gagal meng-upload file bukti pembayaran.");
+    } else {
+        // Logging untuk memastikan file di-upload
+        error_log("File berhasil di-upload ke: " . $target_file);
     }
 
     // Masukkan data ke tabel payments
