@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('Asia/Jakarta');
+
 $servername = "localhost";
 $username = "u140589105_kopi";
 $password = "Kopi12345.";

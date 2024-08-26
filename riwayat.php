@@ -87,6 +87,7 @@ $history = getHistory();
                                         <tr>
                                             <td>ID</td>
                                             <td>User ID</td>
+                                            <td>Order ID</td>
                                             <td>Nama</td>
                                             <td>No. Handphone</td>
                                             <td>Alamat</td>
@@ -96,6 +97,7 @@ $history = getHistory();
                                             <td>Kurir</td>
                                             <td>Status</td>
                                             <td>Tanggal Pesanan</td>
+                                            <td>Produk</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -104,6 +106,7 @@ $history = getHistory();
                                                 <tr>
                                                     <td><?php echo htmlspecialchars($order['id']); ?></td>
                                                     <td><?php echo htmlspecialchars($order['user_id']); ?></td>
+                                                    <td><?php echo htmlspecialchars($order['order_id']); ?></td>
                                                     <td><?php echo htmlspecialchars($order['name']); ?></td>
                                                     <td><?php echo htmlspecialchars($order['phone']); ?></td>
                                                     <td><?php echo htmlspecialchars($order['address']); ?></td>
@@ -113,11 +116,23 @@ $history = getHistory();
                                                     <td><?php echo htmlspecialchars($order['courier']); ?></td>
                                                     <td><?php echo htmlspecialchars($order['status']); ?></td>
                                                     <td><?php echo htmlspecialchars($order['order_date']); ?></td>
+                                                    <td>
+                                                        <?php
+                                                        // Decode JSON untuk menampilkan daftar produk
+                                                        $products = json_decode($order['products'], true);
+                                                        if (!empty($products)):
+                                                            foreach ($products as $product): ?>
+                                                                <p><?php echo htmlspecialchars($product['name']); ?> (x<?php echo htmlspecialchars($product['quantity']); ?>)</p>
+                                                            <?php endforeach;
+                                                        else: ?>
+                                                            <p>Tidak ada produk.</p>
+                                                        <?php endif; ?>
+                                                    </td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="11" style="text-align:center;">Tidak ada riwayat pesanan.</td>
+                                                <td colspan="13" style="text-align:center;">Tidak ada riwayat pesanan.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>

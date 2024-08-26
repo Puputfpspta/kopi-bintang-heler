@@ -83,6 +83,20 @@ try {
     $stmt->bind_param("iiiiss", $user_id, $order_id, $shipping_cost, $product_total_price, $total_price, $payment_proof);
 
     if ($stmt->execute()) {
+        
+        // Masukkan produk ke dalam kolom 'products' di tabel orders
+        $products_json = json_encode($cart);
+        $update_order_query = "UPDATE orders SET products = ? WHERE id = ?";
+        $update_order_stmt = $conn->prepare($update_order_query);
+        if (!$update_order_stmt) {
+            throw new Exception("Error preparing update statement for orders: " . $conn->error);
+        }
+        $update_order_stmt->bind_param("si", $products_json, $order_id);
+        if (!$update_order_stmt->execute()) {
+            throw new Exception("Gagal menyimpan produk dalam pesanan: " . $update_order_stmt->error);
+        }
+        $update_order_stmt->close();
+        
         // Kurangi stok produk di tabel products berdasarkan cart
         foreach ($cart as $item) {
             $product_id = $item['id'];

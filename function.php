@@ -237,7 +237,7 @@ function getCompletedOrders() {
 function moveOrderToHistory($order_id) {
     global $conn;
     try {
-        // Ambil data pesanan
+        // Ambil data pesanan dari tabel orders
         $stmt = $conn->prepare("SELECT * FROM orders WHERE id = ?");
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $conn->error);
@@ -249,12 +249,36 @@ function moveOrderToHistory($order_id) {
         $stmt->close();
 
         if ($order) {
-            // Masukkan data ke tabel riwayat dengan status 'Done'
-            $stmt = $conn->prepare("INSERT INTO riwayat (user_id, name, phone, address, house_number, postal_code, city, courier, status, order_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Done', ?)");
+            // Masukkan data ke tabel riwayat
+            $stmt = $conn->prepare("
+                INSERT INTO riwayat (user_id, order_id, name, phone, address, house_number, postal_code, city, courier, status, order_date, products)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Done', ?, ?)");
             if (!$stmt) {
                 throw new Exception("Prepare failed: " . $conn->error);
             }
-            $stmt->bind_param("issssssss", $order['user_id'], $order['name'], $order['phone'], $order['address'], $order['house_number'], $order['postal_code'], $order['city'], $order['courier'], $order['order_date']);
+            $stmt->bind_param("iisssssssss", 
+                $order['user_id'], 
+                $order['id'], 
+                $order['name'], 
+                $order['phone'], 
+                $order['address'], 
+                $order['house_number'], 
+                $order['postal_code'], 
+                $order['city'], 
+                $order['courier'], 
+                $order['order_date'],
+                $order['products']);
+            if (!$stmt->execute()) {
+                throw new Exception("Execute failed: " . $stmt->error);
+            }
+            $stmt->close();
+
+            // Hapus data dari tabel payments yang terkait dengan order ini
+            $stmt = $conn->prepare("DELETE FROM payments WHERE order_id = ?");
+            if (!$stmt) {
+                throw new Exception("Prepare failed: " . $conn->error);
+            }
+            $stmt->bind_param("i", $order_id);
             if (!$stmt->execute()) {
                 throw new Exception("Execute failed: " . $stmt->error);
             }
@@ -325,14 +349,14 @@ function reduceProductStock($product_id, $quantity) {
     return true;
 }
 
-function deleteProduct($id) {
+function deleteOrder($order_id) {
     global $conn;
     try {
-        $stmt = $conn->prepare("DELETE FROM products WHERE id = ?");
+        $stmt = $conn->prepare("DELETE FROM orders WHERE id = ?");
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $conn->error);
         }
-        $stmt->bind_param("i", $id);
+        $stmt->bind_param("i", $order_id);
         if (!$stmt->execute()) {
             throw new Exception("Execute failed: " . $stmt->error);
         }
@@ -343,7 +367,5 @@ function deleteProduct($id) {
     }
     return true;
 }
-
-
 
 ?>

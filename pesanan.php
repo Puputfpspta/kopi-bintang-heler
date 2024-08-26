@@ -1,13 +1,11 @@
-// File pesanan.php
 <?php
 session_start();
 include 'db.php';
 include 'function.php';
 
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
-    exit();
-}
+// Ambil user_id dari sesi
+$user_id = $_SESSION['user_id'];
+
 
 // Ambil data pesanan
 $orders = getOrders();
@@ -33,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,11 +40,132 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/admin.css">
     <style>
+        .table-responsive {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
         .highlighted-row {
             background-color: #ffcc00;
         }
+
+        .table-responsive table {
+            font-size: 0.8rem;
+        }
+
+        .table-responsive th,
+        .table-responsive td {
+            padding: 0.4rem 0.5rem;
+            text-align: left;
+        }
+
+        .table-responsive td select {
+            padding: 0.2rem;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .table-responsive table {
+                font-size: 0.75rem;
+            }
+
+            .table-responsive th,
+            .table-responsive td {
+                padding: 0.3rem 0.4rem;
+            }
+
+            .table-responsive td select {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .table-responsive table {
+                font-size: 0.7rem;
+            }
+
+            .table-responsive th,
+            .table-responsive td {
+                padding: 0.3rem 0.4rem;
+            }
+
+            .table-responsive td select {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* CSS untuk modal */
+        #productsModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #productsModalContent {
+            background-color: #333;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        #productsModalContent h3 {
+            color: #ffc107;
+            margin-bottom: 20px;
+        }
+
+        #productsList {
+            color: white;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        #productsList img {
+            display: block;
+            margin: 5px 0;
+            max-width: 100px;
+        }
+
+        .btn-close-modal {
+            background-color: #ffc107;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-close-modal:hover {
+            background-color: #e0a800;
+        }
+
+        /* Tombol "Produk yang Dibeli" */
+        .btn-show-products {
+            background-color: #ffc107;
+            color: black;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .btn-show-products:hover {
+            background-color: #e0a800;
+        }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <div class="sidebar-brand">
@@ -120,6 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                                             <td>Kurir</td>
                                             <td>Status</td>
                                             <td>Tanggal Pesanan</td>
+                                            <td>Produk yang Dibeli</td>
                                             <td>Aksi</td>
                                         </tr>
                                     </thead>
@@ -139,6 +260,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                                                     <td><?php echo htmlspecialchars($order['status']); ?></td>
                                                     <td><?php echo htmlspecialchars($order['order_date']); ?></td>
                                                     <td>
+                                                        <?php if (!empty($order['products'])): ?>
+                                                            <button class="btn-show-products" onclick="showProductsModal('<?php echo htmlspecialchars($order['products']); ?>')">Produk yang Dibeli</button>
+                                                        <?php else: ?>
+                                                            Tidak ada produk.
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td>
                                                         <form method="post">
                                                             <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
                                                             <select name="status" onchange="this.form.submit()">
@@ -152,7 +280,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="12" style="text-align:center;">Tidak ada pesanan.</td>
+                                                <td colspan="13" style="text-align:center;">Tidak ada pesanan.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -165,15 +293,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
         </main>
     </div>
 
-    <?php if ($highlightId): ?>
+    <div id="productsModal" style="display:none;">
+        <div id="productsModalContent">
+            <h3>Produk yang Dibeli</h3>
+            <div id="productsList"></div>
+            <button class="btn-close-modal" onclick="closeProductsModal()">Kembali</button>
+        </div>
+    </div>
+
     <script>
+        function showProductsModal(productsJson) {
+            var products = JSON.parse(productsJson);
+
+            var productsList = document.getElementById('productsList');
+            productsList.innerHTML = '';
+
+            products.forEach(function(product) {
+                var productElement = document.createElement('div');
+                productElement.innerHTML = '<img src="' + product.imgSrc + '" alt="' + product.name + '">' +
+                    '<p>' + product.name + ' (x' + product.quantity + ')</p>';
+                productsList.appendChild(productElement);
+            });
+
+            document.getElementById('productsModal').style.display = 'flex';
+        }
+
+        function closeProductsModal() {
+            document.getElementById('productsModal').style.display = 'none';
+        }
+
+        <?php if ($highlightId): ?>
         document.addEventListener("DOMContentLoaded", function() {
             var element = document.getElementById("order-<?php echo $highlightId; ?>");
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
+        <?php endif; ?>
     </script>
-    <?php endif; ?>
 </body>
+
 </html>

@@ -45,6 +45,7 @@ if (isset($_POST['login'])) {
                 $_SESSION['role'] = $role;
                 header("Location: admin.php");
             } else {
+                // Menyimpan user_id dan informasi lainnya dalam sesi
                 $_SESSION['user_id'] = $id;
                 $_SESSION['user_email'] = $email;
                 $_SESSION['role'] = $role;
